@@ -1,0 +1,50 @@
+{
+  "entities": {
+    "Subscriber": {
+      "title": "Newsletter Subscriber",
+      "description": "Information about a newsletter subscriber.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "The user's email address."
+        },
+        "subscribedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the user subscribed."
+        }
+      },
+      "required": ["email", "subscribedAt"]
+    },
+    "BlogPost": {
+      "title": "Blog Post",
+      "description": "Information about a blog post.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "excerpt": { "type": "string" },
+        "content": { "type": "string" },
+        "date": { "type": "string" },
+        "author": { "type": "string" },
+        "category": { "type": "string" },
+        "image": { "type": "string" },
+        "featured": { "type": "boolean" },
+        "readCount": { "type": "integer" },
+        "link": { "type": "string", "description": "External link to the blog post." }
+      },
+      "required": ["title", "excerpt", "image", "category"]
+    }
+  },
+  "firestore": {
+    "/newsletter/{subscriberId}": {
+      "schema": "Subscriber",
+      "description": "Collection of newsletter subscriptions."
+    },
+    "/blogs/{blogId}": {
+      "schema": "BlogPost",
+      "description": "Collection of blog posts."
+    }
+  }
+}

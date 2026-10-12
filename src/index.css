@@ -1,0 +1,333 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --color-primary: #0095af;
+  --color-secondary: #ffb74b;
+  --color-dark-bg: #0b0f13;
+
+  --color-bg-base: var(--bg-base);
+  --color-text-base: var(--text-base);
+  --color-text-muted: var(--text-muted);
+  --color-border-base: var(--border-base);
+  --color-glass-bg: var(--glass-bg);
+
+  /* Redesign tokens: all theme-aware */
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-text-subtle: var(--text-subtle);
+  --color-border-strong: var(--border-strong);
+  --color-brand-ink: var(--brand-ink);
+  --color-amber-ink: var(--amber-ink);
+  --color-btn: var(--btn);
+  --color-btn-hover: var(--btn-hover);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-crit: var(--crit);
+
+  /* Teal band: intentional contrast panels (SOC, CTA) in both themes */
+  --color-band-text: var(--band-text);
+  --color-band-muted: var(--band-muted);
+  --color-band-border: var(--band-border);
+  --color-band-surface: var(--band-surface);
+}
+
+:root {
+  --bg-base: #081217;
+  --surface: #0d1a20;
+  --surface-2: #0b161b;
+  --text-base: #e6eef1;
+  --text-muted: #94a8b2;
+  --text-subtle: #6b8590;
+  --border-base: rgba(148, 190, 204, 0.12);
+  --border-strong: rgba(148, 190, 204, 0.24);
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --brand-ink: #4cc6db;
+  --amber-ink: #ffb74b;
+  --btn: #00788d;
+  --btn-hover: #00879f;
+  --ok: #3ecf8e;
+  --warn: #f5b84a;
+  --crit: #f87171;
+  --hero-from: #0f3540;
+  --hero-to: #081217;
+
+  --band-bg: linear-gradient(160deg, #11404c 0%, #0b2a33 55%, #08202a 100%);
+  --band-text: #e6f1f4;
+  --band-muted: #a3bec7;
+  --band-border: rgba(255, 255, 255, 0.1);
+  --band-surface: rgba(255, 255, 255, 0.04);
+  color-scheme: dark;
+}
+
+:root.light {
+  --bg-base: #f4f8fc;
+  --surface: #ffffff;
+  --surface-2: #eaf3f9;
+  --text-base: #142b3b;
+  --text-muted: #526779;
+  --text-subtle: #5a6e7d;
+  --border-base: #d8e5ee;
+  --border-strong: #bfd2df;
+  --glass-bg: rgba(15, 23, 42, 0.04);
+  --brand-ink: #00718a;
+  --amber-ink: #a84d08; /* >=4.5:1 on every light tint */
+  --btn: #00788d;
+  --btn-hover: #006a7d;
+  --ok: #12805c;
+  --warn: #a16207;
+  --crit: #c0352b;
+  --hero-from: #e2f2f8;
+  --hero-to: #f4f8fc;
+  color-scheme: light;
+
+  /* Light-mode visual system: tints, patterns and card depth (see "Light mode scenes" below) */
+  --tint-alt: #eaf3f9;
+  --tint-cyan: #e1f7f8;
+  --tint-teal: #e4f5f1;
+  --pattern-network: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' fill='none'%3E%3Cg stroke='%230095af' stroke-opacity='0.16' stroke-width='1'%3E%3Cpath d='M22 34L118 14L198 62L162 142L58 122L22 34M118 14L58 122M198 62L238 120M162 142L228 202L104 222L58 122M104 222L10 192L58 122M162 142L104 222M0 120L22 34'/%3E%3C/g%3E%3Cg fill='%230095af' fill-opacity='0.28'%3E%3Ccircle cx='22' cy='34' r='2.5'/%3E%3Ccircle cx='118' cy='14' r='2'/%3E%3Ccircle cx='198' cy='62' r='3'/%3E%3Ccircle cx='162' cy='142' r='2.5'/%3E%3Ccircle cx='58' cy='122' r='3'/%3E%3Ccircle cx='228' cy='202' r='2'/%3E%3Ccircle cx='104' cy='222' r='2.5'/%3E%3Ccircle cx='10' cy='192' r='2'/%3E%3C/g%3E%3C/svg%3E");
+  --pattern-circuit: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' fill='none'%3E%3Cg stroke='%2300718a' stroke-opacity='0.13' stroke-width='1'%3E%3Cpath d='M0 40h52l16 16v44h92M40 160v-36l20-20h40M120 0v28l-16 16H80M160 128h-34l-14 14v18'/%3E%3C/g%3E%3Cg fill='%2300718a' fill-opacity='0.22'%3E%3Ccircle cx='68' cy='100' r='2.5'/%3E%3Ccircle cx='100' cy='104' r='2.5'/%3E%3Ccircle cx='80' cy='44' r='2.5'/%3E%3Ccircle cx='112' cy='142' r='2.5'/%3E%3C/g%3E%3C/svg%3E");
+  --pattern-dots: radial-gradient(circle at 1px 1px, rgba(0, 113, 138, 0.16) 1px, transparent 1.6px);
+  --card-shadow: 0 1px 2px rgba(20, 43, 59, 0.04), 0 10px 30px -14px rgba(20, 43, 59, 0.14);
+  --card-shadow-hover: 0 2px 4px rgba(20, 43, 59, 0.05), 0 18px 40px -16px rgba(0, 113, 138, 0.28);
+}
+
+@layer base {
+  body {
+    @apply bg-bg-base text-text-base font-sans antialiased transition-colors duration-300;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand-ink);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  section[id] {
+    scroll-margin-top: 84px;
+  }
+}
+
+@layer components {
+  .shell {
+    max-width: 76rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .shell { padding-inline: 2rem; }
+  }
+}
+
+.band {
+  background: var(--band-bg);
+  color: var(--band-text);
+}
+
+.hero-bg {
+  background:
+    radial-gradient(60% 50% at 75% 30%, color-mix(in srgb, var(--color-primary) 18%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--hero-from) 0%, var(--hero-to) 100%);
+}
+
+.grid-lines {
+  background-image:
+    linear-gradient(var(--border-base) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-base) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at 70% 30%, black 10%, transparent 70%);
+}
+
+.flow-dash {
+  stroke-dasharray: 4 6;
+  animation: flow-dash 1.2s linear infinite;
+}
+@keyframes flow-dash {
+  to { stroke-dashoffset: -20; }
+}
+
+.glow-teal {
+  box-shadow: 0 0 20px rgba(0, 149, 175, 0.2);
+}
+
+.border-gradient {
+  border: 1px solid var(--border-base);
+}
+
+.glass {
+  @apply backdrop-blur-md border;
+  background: var(--glass-bg);
+  border-color: var(--border-base);
+}
+
+.section-grid {
+  background-image: radial-gradient(circle at 2px 2px, rgba(0, 149, 175, 0.1) 1px, transparent 0);
+  background-size: 40px 40px;
+}
+
+.chat-bubble-gradient {
+  background: linear-gradient(135deg, #0095af, #006a7d);
+}
+
+.amber-text {
+  @apply text-secondary;
+}
+
+.service-card-immersive {
+  @apply border transition-all hover:border-secondary;
+  border-color: var(--border-base);
+  &:hover {
+    background: var(--glass-bg);
+  }
+}
+
+/* ---------- Light mode scenes ----------
+   Section backgrounds that only exist in light mode. In dark mode these classes do nothing,
+   so each section keeps its existing bg-* utility. Patterns sit in ::before, behind the content. */
+:root.light .scene { position: relative; isolation: isolate; }
+:root.light .scene::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+
+/* Trust strip: bright, understated band between hero and content */
+:root.light .scene-strip {
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbfd 100%);
+  box-shadow: inset 0 1px 0 #ffffff;
+}
+
+/* Alternate tinted section with corner glows and a faint dot field */
+:root.light .scene-tint {
+  background:
+    radial-gradient(45% 55% at 100% 0%, rgba(0, 149, 175, 0.09), transparent 70%),
+    radial-gradient(40% 50% at 0% 100%, rgba(18, 128, 92, 0.06), transparent 70%),
+    var(--tint-alt);
+}
+:root.light .scene-tint::before {
+  background-image: var(--pattern-dots);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(60% 70% at 90% 10%, black, transparent 75%);
+}
+
+/* Structured technical grid; Security Coverage and How CYFY works share it and read as one block */
+:root.light .scene-grid { background: var(--bg-base); }
+:root.light .scene-grid::before {
+  background-image:
+    linear-gradient(rgba(0, 113, 138, 0.075) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 113, 138, 0.075) 1px, transparent 1px),
+    linear-gradient(rgba(0, 113, 138, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 113, 138, 0.04) 1px, transparent 1px);
+  background-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
+  mask-image: linear-gradient(180deg, transparent, black 18%, black 82%, transparent);
+}
+:root.light .scene-grid.scene-fade-top::before { mask-image: linear-gradient(180deg, transparent, black 240px); }
+:root.light .scene-grid.scene-fade-bottom::before { mask-image: linear-gradient(0deg, transparent, black 240px); }
+
+/* Cyan wash with circuit traces along the edges (SOC) */
+:root.light .scene-circuit { background: linear-gradient(180deg, var(--tint-cyan) 0%, #eef8fb 100%); }
+:root.light .scene-circuit::before {
+  background-image: var(--pattern-circuit);
+  background-size: 160px 160px;
+  mask-image: linear-gradient(90deg, black, transparent 22%, transparent 78%, black);
+}
+
+/* Network nodes behind the platform and threat intelligence showcase */
+:root.light .scene-network {
+  background:
+    radial-gradient(50% 60% at 85% 40%, rgba(0, 149, 175, 0.1), transparent 70%),
+    linear-gradient(180deg, var(--tint-alt) 0%, var(--tint-cyan) 100%);
+}
+:root.light .scene-network::before {
+  background-image: var(--pattern-network);
+  background-size: 240px 240px;
+  mask-image: radial-gradient(70% 80% at 80% 30%, black 20%, transparent 75%);
+}
+
+/* Soft teal wash (customer proof) */
+:root.light .scene-teal {
+  background:
+    radial-gradient(45% 60% at 10% 20%, rgba(18, 128, 92, 0.08), transparent 70%),
+    linear-gradient(180deg, var(--tint-teal) 0%, #eef7f5 100%);
+}
+
+/* Base background with an ambient glow behind the content */
+:root.light .scene-glow {
+  background:
+    radial-gradient(60% 55% at 50% 50%, rgba(0, 149, 175, 0.07), transparent 72%),
+    var(--bg-base);
+}
+
+/* Hero: blue-to-cyan environment, network pattern and a slowly drifting glow */
+:root.light .hero-bg {
+  isolation: isolate;
+  background:
+    radial-gradient(55% 60% at 78% 28%, rgba(0, 149, 175, 0.16), transparent 70%),
+    radial-gradient(45% 50% at 6% 90%, rgba(18, 160, 140, 0.1), transparent 70%),
+    linear-gradient(180deg, #e2f2f8 0%, #ecf6fb 55%, var(--bg-base) 100%);
+}
+:root.light .hero-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--pattern-network);
+  background-size: 240px 240px;
+  mask-image: radial-gradient(55% 70% at 72% 35%, black 10%, transparent 75%);
+}
+.hero-ambient { display: none; }
+:root.light .hero-ambient {
+  display: block;
+  position: absolute;
+  inset: -15%;
+  pointer-events: none;
+  background:
+    radial-gradient(28% 32% at 70% 30%, rgba(0, 170, 190, 0.14), transparent 70%),
+    radial-gradient(24% 28% at 30% 70%, rgba(0, 149, 175, 0.08), transparent 70%);
+  animation: ambient-drift 22s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes ambient-drift {
+  from { transform: translate3d(-2%, -1%, 0) scale(1); }
+  to { transform: translate3d(3%, 2%, 0) scale(1.06); }
+}
+
+/* White cards get soft depth instead of flat outlines (anything with its own shadow-* utility keeps it) */
+:root.light :is(.rounded-xl, .rounded-2xl, .rounded-3xl).bg-surface.border:not([class*="shadow-"]) { box-shadow: var(--card-shadow); }
+
+/* Security Coverage cards: white in light mode, teal band in dark */
+:root.light .coverage-card {
+  --band-bg: #ffffff;
+  --band-text: #142b3b;
+  --band-muted: #526779;
+  --band-border: #d8e5ee;
+  /* Tailwind's --color-band-* resolve at :root, so re-point them here for the band-* utilities */
+  --color-band-text: #142b3b;
+  --color-band-muted: #526779;
+  --color-band-border: #d8e5ee;
+}
+:root.light .coverage-card:not(.shadow-xl) { box-shadow: var(--card-shadow); }
+:root.light .coverage-card:hover { box-shadow: var(--card-shadow-hover); }
+:root.light .coverage-card.shadow-xl { box-shadow: var(--card-shadow-hover); }
+
+/* Custom CYFY Cursor hide native cursor on pointer devices */
+@media (pointer: fine) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+}
+
+@keyframes scroll-up {
+  0%, 20% { transform: translateY(0); }
+  25%, 45% { transform: translateY(-48px); }
+  50%, 70% { transform: translateY(-64px); }
+  75%, 95% { transform: translateY(-96px); }
+  100% { transform: translateY(-128px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

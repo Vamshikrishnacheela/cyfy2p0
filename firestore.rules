@@ -1,0 +1,60 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() { return request.auth != null; }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    
+    // --- Newsletter ---
+    match /newsletter/{subscriberId} {
+      function isValidSubscriber(data) {
+        return data.keys().hasAll(['email', 'subscribedAt']) &&
+               data.keys().size() == 2 &&
+               data.email is string && data.email.size() <= 256 &&
+               data.subscribedAt == request.time;
+      }
+
+      allow create: if isValidSubscriber(incoming()) && isValidId(subscriberId);
+      // No read access for public to protect PII
+    }
+
+    // --- Leads (homepage exposure snapshot form) ---
+    match /leads/{leadId} {
+      // Mirrors the client-side validation in src/components/home/LeadCta.tsx
+      function isValidLead(data) {
+        return data.keys().hasAll(['email', 'domain', 'source', 'createdAt']) &&
+               data.keys().size() == 4 &&
+               data.email is string && data.email.size() <= 256 &&
+               data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$') &&
+               data.domain is string && data.domain.size() <= 253 &&
+               data.domain.matches('^[a-z0-9-]+(\\.[a-z0-9-]+)+$') &&
+               data.source == 'exposure-snapshot' &&
+               data.createdAt == request.time;
+      }
+
+      // Create-only: no read, list, update or delete from the client. Leads are PII.
+      allow create: if isValidLead(incoming()) && isValidId(leadId);
+    }
+
+    // --- Blogs ---
+    match /blogs/{blogId} {
+      function isValidBlog(data) {
+        return data.keys().hasAll(['title', 'excerpt', 'image', 'category']) &&
+               data.title is string && data.title.size() <= 500 &&
+               data.excerpt is string && data.excerpt.size() <= 2000;
+      }
+
+      allow read, list: if true; // Blogs are public
+      // Admin writes would go here if we had an admin concept
+      // For now, only read access
+    }
+  }
+}
