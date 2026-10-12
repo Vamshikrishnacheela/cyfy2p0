@@ -32,11 +32,11 @@ const LEADERS = [
     title: 'Founder, CEO & Managing Director',
     bio: 'A visionary leader with 20+ years of experience in network and cybersecurity. He has spearheaded large-scale digital transformation and security initiatives for global enterprises. His mission for CYFY is to empower businesses with proactive security platforms that allow them to innovate with confidence.',
   },
-  // {
-  //   name: 'Babu VY',
-  //   title: 'Manager, Projects & Security Operations',
-  //   bio: 'With 20+ years of expertise in network and security operations, Babu leads project execution and deployment, ensuring that complex cybersecurity initiatives are delivered with high standards of performance.',
-  // },
+  {
+    name: 'Babu VY',
+    title: 'Manager, Projects & Security Operations',
+    bio: 'With 20+ years of expertise in network and security operations, Babu leads project execution and deployment, ensuring that complex cybersecurity initiatives are delivered with high standards of performance.',
+  },
 ];
 
 const initials = (name: string) => name.split(' ').filter(Boolean).map(w => w[0]).slice(0, 2).join('');
