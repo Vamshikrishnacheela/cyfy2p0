@@ -92,7 +92,6 @@ export const CONTACT_INFO = {
   email: "info@cyfy.ai",
   address: "3rd Floor, PSM Infra, near Kala Jyothi IT Park, Kondapur, Hyderabad 500084",
   phone: "+91 99668 84343",
-  phoneHref: "tel:+919966884343"
 };
 
 export const BLOG_POSTS = [

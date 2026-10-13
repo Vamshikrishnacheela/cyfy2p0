@@ -108,9 +108,6 @@ export default function LeadCta() {
             {status !== 'success' && <p className="mt-3 text-left sm:text-center text-xs text-band-muted">We only use your email to send the snapshot.</p>}
 
             <p className="mt-8 inline-flex flex-wrap items-center justify-center gap-2 text-sm">
-              <Phone className="w-4 h-4 text-secondary" aria-hidden="true" />
-              Or talk to your security expert:
-              <a href={CONTACT.phoneHref} className="font-semibold hover:text-secondary transition-colors">{CONTACT.phone}</a>
             </p>
           </div>
         </div>

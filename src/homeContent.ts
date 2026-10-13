@@ -229,32 +229,25 @@ export const INDUSTRIES: Industry[] = [
 
 export const FRAMEWORKS = ['SEBI CSCRF', 'RBI', 'IRDAI', 'ISO 27001', 'ISO 42001', 'SOC 2', 'PCI DSS', 'HIPAA', 'GDPR', 'NIST CSF', 'IEC 62443'];
 
-export const OEM_GROUPS = [
-  { id: 'network', label: 'Network', icon: Network, partners: [
-    { name: 'HPE Aruba', body: 'Campus wireless, switching and NAC' },
-    { name: 'Juniper', body: 'Routing, SD-WAN and data centre fabric' },
-    { name: 'Palo Alto Networks', body: 'NGFW and SASE, deployed and managed' },
-    { name: 'Fortinet', body: 'FortiGate firewalls and FortiSIEM' },
-  ] },
-  { id: 'secops', label: 'Security operations', icon: ShieldCheck, partners: [
-    { name: 'SentinelOne', body: 'EDR and XDR monitored by our SOC' },
-    { name: 'Securonix', body: 'Next-gen SIEM for the GUARD++ tier' },
-    { name: 'Google SecOps', body: 'Chronicle SIEM for high-volume logs' },
-    { name: 'SequreTek', body: 'Managed SIEM for the GUARD+ tier' },
-    { name: 'BluSapphire', body: 'Unified detection and response' },
-  ] },
-  { id: 'cloud', label: 'Cloud and SaaS', icon: Cloud, partners: [
-    { name: 'Cloudflare', body: 'WAF, secure web gateway and RBI' },
-    { name: 'Zscaler', body: 'Zero trust access for users and apps' },
-    { name: 'Netskope', body: 'CASB and SaaS data protection' },
-    { name: 'AccuKnox', body: 'CNAPP and Kubernetes security' },
-  ] },
-  { id: 'identity', label: 'Identity', icon: Fingerprint, partners: [
-    { name: 'CyberArk', body: 'Privileged access and credential vaulting' },
-    { name: 'JumpCloud', body: 'Directory, SSO and device identity' },
-    { name: 'Cymmetri', body: 'Identity security and governance' },
-    { name: 'Oleria', body: 'Access governance across SaaS' },
-  ] },
+export interface PartnerLogo { name: string; logo: string; plate: string }
+// Partner logos as published on https://www.cyfy.ai/our-partners (organisations identified from the artwork).
+// Files are the originals with empty margins trimmed; `plate` matches each logo's own background
+// (SentinelOne's white wordmark sits on a dark plate), so no logo is recoloured or filtered.
+export const PARTNERS: PartnerLogo[] = [
+  { name: 'SentinelOne', logo: new URL('./assets/partners/sentinelone.png', import.meta.url).href, plate: '#111418' },
+  { name: 'Fortinet', logo: new URL('./assets/partners/fortinet.png', import.meta.url).href, plate: '#ffffff' },
+  { name: 'Cloudflare', logo: new URL('./assets/partners/cloudflare.png', import.meta.url).href, plate: '#ffffff' },
+  { name: 'BluSapphire', logo: new URL('./assets/partners/blusapphire.png', import.meta.url).href, plate: '#050c19' },
+  { name: 'HPE', logo: new URL('./assets/partners/hpe.png', import.meta.url).href, plate: '#292d3a' },
+  { name: 'Zscaler', logo: new URL('./assets/partners/zscaler.png', import.meta.url).href, plate: '#ffffff' },
+  { name: 'Infraon', logo: new URL('./assets/partners/infraon.png', import.meta.url).href, plate: '#f9f9f9' },
+  { name: 'GlobalSign', logo: new URL('./assets/partners/globalsign.png', import.meta.url).href, plate: '#ffffff' },
+  { name: 'Cato Networks', logo: new URL('./assets/partners/cato-networks.png', import.meta.url).href, plate: '#ffffff' },
+  { name: 'CyberArk', logo: new URL('./assets/partners/cyberark.png', import.meta.url).href, plate: '#ffffff' },
+  { name: 'Sequretek', logo: new URL('./assets/partners/sequretek.png', import.meta.url).href, plate: '#ffffff' },
+  { name: 'Innspark', logo: new URL('./assets/partners/innspark.png', import.meta.url).href, plate: '#1d3d59' },
+  { name: 'OPSWAT', logo: new URL('./assets/partners/opswat.png', import.meta.url).href, plate: '#050f22' },
+  { name: 'ZeroPort', logo: new URL('./assets/partners/zeroport.png', import.meta.url).href, plate: '#0d0d0d' },
 ];
 
 export const FOOTER_COLUMNS = [
