@@ -26,6 +26,7 @@ const ServiceDetailPage = lazy(() => import('./pages/ServiceDetailPage'));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
+const EventsPage = lazy(() => import('./pages/EventsPage'));
 
 function NotFound() {
   return (
@@ -120,6 +121,7 @@ export default function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/blog" element={<BlogPage />} />
+                <Route path="/events" element={<EventsPage />} />
                 <Route path="/service/:slug" element={<ServiceDetailPage />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
                 <Route path="/terms" element={<TermsPage />} />

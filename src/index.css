@@ -308,6 +308,27 @@
 :root.light .coverage-card:hover { box-shadow: var(--card-shadow-hover); }
 :root.light .coverage-card.shadow-xl { box-shadow: var(--card-shadow-hover); }
 
+/* Partner logo marquee: the track holds two identical rows, so sliding it by -50% lands on an identical frame */
+.marquee-viewport {
+  mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+}
+.marquee-track {
+  animation: marquee 50s linear infinite;
+}
+.marquee-viewport:hover .marquee-track,
+.marquee-viewport:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to { transform: translate3d(-50%, 0, 0); }
+}
+/* Reduced motion: no movement; the single row can be scrolled sideways instead */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none !important; }
+  .marquee-viewport { overflow-x: auto; mask-image: none; }
+  .marquee-row[aria-hidden="true"] { display: none; }
+}
+
 /* Custom CYFY Cursor hide native cursor on pointer devices */
 @media (pointer: fine) {
   *, *::before, *::after {

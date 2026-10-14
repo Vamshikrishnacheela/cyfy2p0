@@ -115,7 +115,7 @@ function ProveView() {
 }
 
 const DETAIL: Record<NodeId, { title: string; body: string; bullets: string[]; link?: { to: string; label: string }; external?: { href: string; label: string }; View: () => JSX.Element }> = {
-  cyshield: { title: PRODUCTS.cyshield.title, body: PRODUCTS.cyshield.body, bullets: PRODUCTS.cyshield.bullets, link: { to: '/#contact', label: 'Get a free exposure snapshot' }, View: OsinterView },
+  cyshield: { title: PRODUCTS.cyshield.title, body: PRODUCTS.cyshield.body, bullets: PRODUCTS.cyshield.bullets, View: OsinterView },
   cynapptics: { title: PRODUCTS.cynapptics.title, body: PRODUCTS.cynapptics.body, bullets: PRODUCTS.cynapptics.bullets, external: { href: 'https://cynapptics.cyfy.ai/', label: 'Visit Cynapptics' }, View: cynappticsView },
   day2SecOps: { title: PRODUCTS.day2SecOps.title, body: PRODUCTS.day2SecOps.body, bullets: [], View: Day2View },
   prove: { title: 'Evidence your auditors can use.', body: 'Everything the SOC does is reported back as weekly advisories, a CISO dashboard and audit-ready records.', bullets: ['Weekly threat advisory', 'CISO dashboard', 'Audit-ready records for SEBI CSCRF, ISO 27001 and more'], link: { to: '/#customers', label: 'See customer results' }, View: ProveView },

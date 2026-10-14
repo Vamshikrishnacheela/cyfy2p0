@@ -54,9 +54,6 @@ export default function Capabilities() {
               </span>
               <h3 className="mt-6 text-2xl font-semibold">{tab.lead.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-band-muted">{tab.lead.body}</p>
-              <Link to="/#contact" className="group mt-auto pt-8 inline-flex items-center gap-1.5 text-sm font-medium text-secondary">
-                Talk to a your security expert <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-              </Link>
               <div className="absolute bottom-0 right-0 h-40 w-40 rounded-full bg-secondary/15 blur-3xl pointer-events-none" aria-hidden="true" />
             </div>
 

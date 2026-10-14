@@ -183,9 +183,9 @@ export const ADVISORIES: Advisory[] = [
 ];
 
 export const CASES = [
-  { org: 'A SEBI-registered stock broker', industry: 'Capital markets', icon: Landmark, metric: '6/6', label: 'SEBI CSCRF pillars assessed and remediated', body: 'Gap assessment, VAPT on trading systems and a 24/7 managed SOC ahead of the audit window.', industryId: 'bfsi' },
-  { org: 'Dezerv', industry: 'Wealth management', icon: Building2, metric: '24/7', label: 'SOC coverage on a high-trust wealth platform', body: 'SIEM monitoring with L1 to L3 escalation and a weekly CISO advisory.', industryId: 'bfsi' },
-  { org: 'Theranym', industry: 'Pharmaceuticals', icon: Pill, metric: 'Part 11', label: 'FDA 21 CFR controls mapped and monitored', body: 'Continuous monitoring of validated systems with audit-ready evidence.', industryId: 'pharma' },
+  {  industry: 'Capital markets', icon: Landmark, metric: '6/6', label: 'SEBI CSCRF pillars assessed and remediated', body: 'Gap assessment, VAPT on trading systems and a 24/7 managed SOC ahead of the audit window.', industryId: 'bfsi' },
+  {  industry: 'Wealth management', icon: Building2, metric: '24/7', label: 'SOC coverage on a high-trust wealth platform', body: 'SIEM monitoring with L1 to L3 escalation and a weekly CISO advisory.', industryId: 'bfsi' },
+  {  industry: 'Pharmaceuticals', icon: Pill, metric: 'Part 11', label: 'FDA 21 CFR controls mapped and monitored', body: 'Continuous monitoring of validated systems with audit-ready evidence.', industryId: 'pharma' },
 ];
 
 export const FOUNDER_NOTE = {
@@ -229,25 +229,25 @@ export const INDUSTRIES: Industry[] = [
 
 export const FRAMEWORKS = ['SEBI CSCRF', 'RBI', 'IRDAI', 'ISO 27001', 'ISO 42001', 'SOC 2', 'PCI DSS', 'HIPAA', 'GDPR', 'NIST CSF', 'IEC 62443'];
 
-export interface PartnerLogo { name: string; logo: string; plate: string }
+export interface PartnerLogo { name: string; logo: string; plate: string; ratio: number }
 // Partner logos as published on https://www.cyfy.ai/our-partners (organisations identified from the artwork).
 // Files are the originals with empty margins trimmed; `plate` matches each logo's own background
-// (SentinelOne's white wordmark sits on a dark plate), so no logo is recoloured or filtered.
+// (SentinelOne's white wordmark sits on a dark plate), so no logo is recoloured or filtered. `ratio` is width / height of the file.
 export const PARTNERS: PartnerLogo[] = [
-  { name: 'SentinelOne', logo: new URL('./assets/partners/sentinelone.png', import.meta.url).href, plate: '#111418' },
-  { name: 'Fortinet', logo: new URL('./assets/partners/fortinet.png', import.meta.url).href, plate: '#ffffff' },
-  { name: 'Cloudflare', logo: new URL('./assets/partners/cloudflare.png', import.meta.url).href, plate: '#ffffff' },
-  { name: 'BluSapphire', logo: new URL('./assets/partners/blusapphire.png', import.meta.url).href, plate: '#050c19' },
-  { name: 'HPE', logo: new URL('./assets/partners/hpe.png', import.meta.url).href, plate: '#292d3a' },
-  { name: 'Zscaler', logo: new URL('./assets/partners/zscaler.png', import.meta.url).href, plate: '#ffffff' },
-  { name: 'Infraon', logo: new URL('./assets/partners/infraon.png', import.meta.url).href, plate: '#f9f9f9' },
-  { name: 'GlobalSign', logo: new URL('./assets/partners/globalsign.png', import.meta.url).href, plate: '#ffffff' },
-  { name: 'Cato Networks', logo: new URL('./assets/partners/cato-networks.png', import.meta.url).href, plate: '#ffffff' },
-  { name: 'CyberArk', logo: new URL('./assets/partners/cyberark.png', import.meta.url).href, plate: '#ffffff' },
-  { name: 'Sequretek', logo: new URL('./assets/partners/sequretek.png', import.meta.url).href, plate: '#ffffff' },
-  { name: 'Innspark', logo: new URL('./assets/partners/innspark.png', import.meta.url).href, plate: '#1d3d59' },
-  { name: 'OPSWAT', logo: new URL('./assets/partners/opswat.png', import.meta.url).href, plate: '#050f22' },
-  { name: 'ZeroPort', logo: new URL('./assets/partners/zeroport.png', import.meta.url).href, plate: '#0d0d0d' },
+  { name: 'SentinelOne', logo: new URL('./assets/partners/sentinelone.png', import.meta.url).href, plate: '#111418', ratio: 5.71 },
+  { name: 'Fortinet', logo: new URL('./assets/partners/fortinet.png', import.meta.url).href, plate: '#ffffff', ratio: 7.50 },
+  { name: 'Cloudflare', logo: new URL('./assets/partners/cloudflare.png', import.meta.url).href, plate: '#ffffff', ratio: 2.67 },
+  { name: 'BluSapphire', logo: new URL('./assets/partners/blusapphire.png', import.meta.url).href, plate: '#050c19', ratio: 5.27 },
+  { name: 'HPE', logo: new URL('./assets/partners/hpe.png', import.meta.url).href, plate: '#292d3a', ratio: 1.78 },
+  { name: 'Zscaler', logo: new URL('./assets/partners/zscaler.png', import.meta.url).href, plate: '#ffffff', ratio: 4.62 },
+  { name: 'Infraon', logo: new URL('./assets/partners/infraon.png', import.meta.url).href, plate: '#f9f9f9', ratio: 4.05 },
+  { name: 'GlobalSign', logo: new URL('./assets/partners/globalsign.png', import.meta.url).href, plate: '#ffffff', ratio: 4.66 },
+  { name: 'Cato Networks', logo: new URL('./assets/partners/cato-networks.png', import.meta.url).href, plate: '#ffffff', ratio: 2.00 },
+  { name: 'CyberArk', logo: new URL('./assets/partners/cyberark.png', import.meta.url).href, plate: '#ffffff', ratio: 5.00 },
+  { name: 'Sequretek', logo: new URL('./assets/partners/sequretek.png', import.meta.url).href, plate: '#ffffff', ratio: 4.71 },
+  { name: 'Innspark', logo: new URL('./assets/partners/innspark.png', import.meta.url).href, plate: '#1d3d59', ratio: 2.74 },
+  { name: 'OPSWAT', logo: new URL('./assets/partners/opswat.png', import.meta.url).href, plate: '#050f22', ratio: 5.55 },
+  { name: 'ZeroPort', logo: new URL('./assets/partners/zeroport.png', import.meta.url).href, plate: '#0d0d0d', ratio: 2.30 },
 ];
 
 export const FOOTER_COLUMNS = [
@@ -269,8 +269,6 @@ export const FOOTER_COLUMNS = [
     { label: 'Cynapptics', product: 'cynapptics' as const, to: '/#platform-cynapptics' },
   ] },
   { title: 'Resources', links: [
-    { label: 'Blog', to: '/blog' },
-    { label: 'Threat intelligence', to: '/#platform-cynapptics' },
     { label: 'Customer stories', to: '/#customers' },
   ] },
   { title: 'Company', links: [
