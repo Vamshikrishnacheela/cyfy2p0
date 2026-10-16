@@ -21,7 +21,6 @@ import Industries from './components/home/Industries';
 import PartnersPlatforms from './components/home/PartnersPlatforms';
 import LeadCta from './components/home/LeadCta';
 
-const BlogPage = lazy(() => import('./pages/BlogPage'));
 const ServiceDetailPage = lazy(() => import('./pages/ServiceDetailPage'));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
@@ -120,7 +119,6 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/about" element={<AboutPage />} />
-                <Route path="/blog" element={<BlogPage />} />
                 <Route path="/events" element={<EventsPage />} />
                 <Route path="/service/:slug" element={<ServiceDetailPage />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />

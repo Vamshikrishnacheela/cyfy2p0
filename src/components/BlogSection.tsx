@@ -1,17 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { BLOG_POSTS as STATIC_BLOGS } from '../constants';
 import { db } from '../lib/firebase';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { BlogPost } from '../types';
-import { ArrowUpRight, BookOpen, Newspaper, Users } from 'lucide-react';
+import { ArrowUpRight, Newspaper, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Reveal, SectionHeader, TextLink } from './home/ui';
+import { Reveal, SectionHeader } from './home/ui';
 
 const RESOURCE_LINKS = [
-  { icon: BookOpen, label: 'Blog', desc: 'Security insights and guides', to: '/blog' },
   { icon: Newspaper, label: 'Threat intelligence', desc: 'Actively exploited CVEs and advisories', to: '/#platform-cynapptics' },
   { icon: Users, label: 'Customer stories', desc: 'Results from regulated teams', to: '/#customers' },
 ];
+
+const cardCls = 'group h-full flex flex-col rounded-2xl border border-border-base bg-surface overflow-hidden transition-all duration-300';
+
+/** A post opens its own external link when it has one; posts without a link are shown as plain cards. */
+function PostCard({ link, children }: { link?: string; children: ReactNode }) {
+  return link
+    ? <a href={link} target="_blank" rel="noopener noreferrer" className={`${cardCls} hover:-translate-y-1 hover:border-border-strong hover:shadow-xl hover:shadow-black/10`}>{children}</a>
+    : <article className={cardCls}>{children}</article>;
+}
 
 export default function BlogSection() {
   const [blogs, setBlogs] = useState<BlogPost[]>(STATIC_BLOGS.slice(0, 3) as BlogPost[]);
@@ -43,18 +51,12 @@ export default function BlogSection() {
         <SectionHeader
           eyebrow="Resources"
           title="Security insights and threat updates."
-          action={<TextLink to="/blog" className="shrink-0">View all insights</TextLink>}
         />
 
         <div className="grid md:grid-cols-3 gap-5">
           {blogs.map((post, index) => (
             <Reveal key={post.id || post.title} delay={index * 0.08}>
-              <Link
-                to={post.link ? post.link : '/blog'}
-                target={post.link ? '_blank' : undefined}
-                rel={post.link ? 'noopener noreferrer' : undefined}
-                className="group h-full flex flex-col rounded-2xl border border-border-base bg-surface overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-border-strong hover:shadow-xl hover:shadow-black/10"
-              >
+              <PostCard link={post.link}>
                 <div className="aspect-[16/9] overflow-hidden bg-surface-2">
                   <img
                     src={post.image}
@@ -71,16 +73,18 @@ export default function BlogSection() {
                   </div>
                   <h3 className="mt-3 text-lg font-semibold leading-snug group-hover:text-brand-ink transition-colors">{post.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-text-muted line-clamp-3">{post.excerpt}</p>
-                  <span className="mt-auto pt-5 inline-flex items-center gap-1 text-sm font-medium text-brand-ink">
-                    Read more <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
-                  </span>
+                  {post.link && (
+                    <span className="mt-auto pt-5 inline-flex items-center gap-1 text-sm font-medium text-brand-ink">
+                      Read more <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+                    </span>
+                  )}
                 </div>
-              </Link>
+              </PostCard>
             </Reveal>
           ))}
         </div>
 
-        <ul className="mt-6 grid sm:grid-cols-3 gap-3">
+        <ul className="mt-6 grid sm:grid-cols-2 gap-3">
           {RESOURCE_LINKS.map(r => (
             <li key={r.label}>
               <Link to={r.to} className="group flex items-center gap-3 rounded-xl border border-border-base bg-surface-2 px-4 py-3.5 transition-colors hover:border-brand-ink">
