@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useLocation } from 'react-router-dom';
 import { CyfyIcon } from './CyfyIcon';
 
 interface TargetRect {
@@ -18,6 +19,10 @@ export const CustomCursor: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const currentHoverElRef = useRef<HTMLElement | null>(null);
+  const mousePosRef = useRef({ x: -100, y: -100 });
+  // Re-checks what's under the pointer; assigned inside the listener effect below
+  const resyncHoverRef = useRef<() => void>(() => {});
+  const location = useLocation();
 
   useEffect(() => {
     // Detect touch-only devices
@@ -27,8 +32,17 @@ export const CustomCursor: React.FC = () => {
     checkTouch();
 
     const handleMouseMove = (e: MouseEvent) => {
+      mousePosRef.current = { x: e.clientX, y: e.clientY };
       setMousePos({ x: e.clientX, y: e.clientY });
       if (!isVisible) setIsVisible(true);
+      // The hovered element may have been unmounted (e.g. a closed dropdown) without firing pointerout
+      if (currentHoverElRef.current && !currentHoverElRef.current.isConnected) clearHover();
+    };
+
+    const clearHover = () => {
+      currentHoverElRef.current = null;
+      setIsHovered(false);
+      setTargetRect(null);
     };
 
     const handleMouseDown = () => setIsClicking(true);
@@ -36,8 +50,7 @@ export const CustomCursor: React.FC = () => {
 
     const handleMouseLeave = () => {
       setIsVisible(false);
-      setIsHovered(false);
-      currentHoverElRef.current = null;
+      clearHover();
     };
 
     const handleMouseEnter = () => {
@@ -54,19 +67,21 @@ export const CustomCursor: React.FC = () => {
 
     const updateRectFromElement = (el: HTMLElement) => {
       const rect = el.getBoundingClientRect();
-      // Ensure element is visible
-      if (rect.width > 0 && rect.height > 0) {
-        const computedStyle = window.getComputedStyle(el);
-        const radius = computedStyle.borderRadius || '8px';
-        setTargetRect({
-          x: rect.left,
-          y: rect.top,
-          width: rect.width,
-          height: rect.height,
-          borderRadius: radius,
-        });
-        setIsHovered(true);
+      // A detached or hidden element measures 0x0 — drop the cover rather than leave it stranded
+      if (!el.isConnected || rect.width === 0 || rect.height === 0) {
+        clearHover();
+        return;
       }
+      const computedStyle = window.getComputedStyle(el);
+      const radius = computedStyle.borderRadius || '8px';
+      setTargetRect({
+        x: rect.left,
+        y: rect.top,
+        width: rect.width,
+        height: rect.height,
+        borderRadius: radius,
+      });
+      setIsHovered(true);
     };
 
     const handlePointerOver = (e: PointerEvent) => {
@@ -83,21 +98,31 @@ export const CustomCursor: React.FC = () => {
       if (related instanceof Node && currentHoverElRef.current.contains(related)) {
         return; // Still inside the interactive element
       }
-      currentHoverElRef.current = null;
-      setIsHovered(false);
-      setTargetRect(null);
+      clearHover();
     };
 
-    // Update rect when user scrolls or resizes while hovering
-    const handleScrollOrResize = () => {
-      if (currentHoverElRef.current) {
-        updateRectFromElement(currentHoverElRef.current);
+    // Content can move or change under a still pointer (scroll, resize, navigation, menus closing),
+    // so resolve the interactive element at the pointer again instead of tracking a stale one
+    const resyncHover = () => {
+      const { x, y } = mousePosRef.current;
+      const el = getInteractiveElement(document.elementFromPoint(x, y));
+      if (el) {
+        currentHoverElRef.current = el;
+        updateRectFromElement(el);
+      } else if (currentHoverElRef.current) {
+        clearHover();
       }
     };
+    resyncHoverRef.current = resyncHover;
+
+    const handleScrollOrResize = () => resyncHover();
+    // Clicks often close menus or navigate; check again once the DOM has updated
+    const handleClick = () => requestAnimationFrame(resyncHover);
 
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('click', handleClick);
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mouseenter', handleMouseEnter);
     document.addEventListener('pointerover', handlePointerOver);
@@ -109,6 +134,7 @@ export const CustomCursor: React.FC = () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('click', handleClick);
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseenter', handleMouseEnter);
       document.removeEventListener('pointerover', handlePointerOver);
@@ -117,6 +143,12 @@ export const CustomCursor: React.FC = () => {
       window.removeEventListener('resize', handleScrollOrResize);
     };
   }, [isVisible]);
+
+  // On route change the page under the pointer is replaced; re-check once it has rendered
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => resyncHoverRef.current());
+    return () => cancelAnimationFrame(raf);
+  }, [location.key]);
 
   if (isTouchDevice || !isVisible) {
     return null;
