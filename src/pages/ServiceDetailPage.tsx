@@ -1,170 +1,180 @@
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'motion/react';
-import { ArrowLeft, CheckCircle2, Shield, Zap, Target, BarChart3, Users } from 'lucide-react';
-import { SERVICES } from '../constants';
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, Mail, Users, Bot } from 'lucide-react';
+import { SERVICES, SERVICE_GROUPS, CONTACT_INFO, serviceBySlug, enquiryHref, type Service } from '../constants';
+import { SOC_SOURCES, SOC_STAGES, SOC_OUTCOMES } from '../homeContent';
+import { Reveal, Eyebrow, PrimaryButton, SecondaryButton } from '../components/home/ui';
+import { usePageMeta } from '../lib/usePageMeta';
 
-export default function ServiceDetailPage() {
-  const { slug } = useParams<{ slug: string }>();
-  const service = SERVICES.find((s) => s.slug === slug);
+const SOC_SLUGS = ['ai-soc', 'managed-security-services'];
 
-  if (!service) {
-    return (
-      <div className="min-h-screen flex items-center justify-center pt-32 px-6">
-        <div className="text-center">
-          <h1 className="text-4xl font-black mb-4">Service Not Found</h1>
-          <Link to="/" className="text-primary hover:underline">Return to Home</Link>
+// Scoping topics for a Managed SOC conversation. These are questions CYFY asks, not service commitments.
+const SOC_SCOPING = [
+  'Which environments and log sources are in scope: endpoints, firewalls, core and trading applications, cloud, Active Directory, OT',
+  'Who we escalate to, and how incidents are classified by severity',
+  'Which response actions the SOC may take directly and which need your approval',
+  'Reporting cadence, service reviews and the audit frameworks you report against',
+];
+
+function SocDetail() {
+  return (
+    <>
+      <section aria-labelledby="soc-coverage" className="mt-16">
+        <h2 id="soc-coverage" className="text-2xl font-semibold tracking-tight">Monitoring coverage</h2>
+        <p className="mt-2 text-text-muted">Sources the SOC can monitor in your environment.</p>
+        <ul className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-3">
+          {SOC_SOURCES.map(s => (
+            <li key={s.label} className="flex items-center gap-3 rounded-xl border border-border-base bg-surface px-4 py-3 text-sm">
+              <s.icon className="w-4 h-4 shrink-0 text-brand-ink" aria-hidden="true" />{s.label}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section aria-labelledby="soc-flow" className="mt-16">
+        <h2 id="soc-flow" className="text-2xl font-semibold tracking-tight">From alert to closure</h2>
+        <ol className="mt-6 grid md:grid-cols-3 gap-4">
+          {SOC_STAGES.map((s, i) => (
+            <li key={s.id} className="rounded-2xl border border-border-base bg-surface p-6">
+              <span className="font-mono text-xs text-amber-ink">0{i + 1}</span>
+              <h3 className="mt-2 text-lg font-semibold">{s.label}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-text-muted">{s.body}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section aria-labelledby="soc-ai" className="mt-16 grid md:grid-cols-2 gap-4">
+        <h2 id="soc-ai" className="sr-only">Automation and analyst review</h2>
+        <div className="rounded-2xl border border-border-base bg-surface p-6">
+          <Bot className="w-5 h-5 text-brand-ink" aria-hidden="true" />
+          <h3 className="mt-3 font-semibold">What automation does</h3>
+          <p className="mt-2 text-sm leading-relaxed text-text-muted">
+            The SIEM normalises and correlates logs from every source against 1,000+ MITRE ATT&amp;CK use cases, and SOAR playbooks carry out agreed containment steps.
+          </p>
         </div>
-      </div>
-    );
-  }
+        <div className="rounded-2xl border border-border-base bg-surface p-6">
+          <Users className="w-5 h-5 text-brand-ink" aria-hidden="true" />
+          <h3 className="mt-3 font-semibold">What analysts do</h3>
+          <p className="mt-2 text-sm leading-relaxed text-text-muted">
+            L1 analysts triage each alert, L2 validates it and L3 investigates before it is escalated to a SOC lead and to you.
+          </p>
+        </div>
+      </section>
 
-  const ServiceIcon = service.icon;
+      <section aria-labelledby="soc-reporting" className="mt-16 grid lg:grid-cols-2 gap-4">
+        <div className="rounded-2xl border border-border-base bg-surface p-6">
+          <h2 id="soc-reporting" className="text-lg font-semibold">Reporting and governance</h2>
+          <ul className="mt-4 space-y-2.5">
+            {SOC_OUTCOMES.map(o => (
+              <li key={o} className="flex items-start gap-2.5 text-sm"><CheckCircle2 className="w-4 h-4 mt-0.5 shrink-0 text-ok" aria-hidden="true" />{o}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="rounded-2xl border border-border-base bg-surface-2 p-6">
+          <h2 className="text-lg font-semibold">What we agree with you before onboarding</h2>
+          <ul className="mt-4 space-y-2.5">
+            {SOC_SCOPING.map(o => (
+              <li key={o} className="flex items-start gap-2.5 text-sm text-text-muted"><Check className="w-4 h-4 mt-0.5 shrink-0 text-brand-ink" aria-hidden="true" />{o}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function ServiceNotFound() {
+  usePageMeta({ title: 'Service not found | CYFY', description: 'This CYFY service page does not exist.', noindex: true });
+  return (
+    <div className="shell min-h-[70vh] flex flex-col items-center justify-center text-center pt-28">
+      <h1 className="text-3xl font-semibold">Service not found</h1>
+      <Link to="/#services" className="mt-6 rounded-lg bg-btn px-5 py-3 text-sm font-semibold text-white hover:bg-btn-hover transition-colors">See all services</Link>
+    </div>
+  );
+}
+
+function ServiceDetail({ service }: { service: Service }) {
+  usePageMeta({ title: `${service.title} | CYFY Solutions`, description: service.description });
+  const group = SERVICE_GROUPS.find(g => g.id === service.group)!;
+  const related = SERVICES.filter(s => s.group === service.group && s.slug !== service.slug);
+  const Icon = service.icon;
 
   return (
-    <div className="min-h-screen bg-bg-base pt-32 pb-24 px-6 overflow-hidden relative">
-      {/* Background Decorative Elements */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full -z-10 translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/5 blur-[120px] rounded-full -z-10 -translate-x-1/2 translate-y-1/2" />
-
-      <div className="max-w-7xl mx-auto">
-        <Link 
-          to="/#services" 
-          className="inline-flex items-center gap-2 text-primary text-xs font-bold tracking-widest uppercase mb-12 hover:gap-4 transition-all"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Service Hub
+    <div className="relative hero-bg overflow-hidden">
+      <div className="absolute inset-0 grid-lines opacity-60 pointer-events-none" aria-hidden="true" />
+      <div className="shell relative pt-28 md:pt-36 pb-20 md:pb-28">
+        <Link to="/#services" className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-text-base transition-colors">
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" /> All services
         </Link>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          {/* Content side */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-                <ServiceIcon className="w-8 h-8" />
-              </div>
-              <div>
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-1 block">
-                  {service.category} Excellence
-                </span>
-                <h1 className="text-4xl md:text-5xl font-black tracking-tight text-text-base">
-                  {service.title}
-                </h1>
-              </div>
+        <div className="mt-8 grid lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-14 items-start">
+          <Reveal>
+            <Eyebrow>{group.label}</Eyebrow>
+            <div className="flex items-center gap-4">
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-brand-ink/30 bg-brand-ink/10 text-brand-ink">
+                <Icon className="w-7 h-7" aria-hidden="true" />
+              </span>
+              <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">{service.title}</h1>
             </div>
-
-            <p className="text-xl text-text-muted mb-8 leading-relaxed font-medium">
-              {service.description}
+            {service.aka && <p className="mt-3 text-sm text-text-subtle">Also known as {service.aka}</p>}
+            <p className="mt-6 text-lg leading-relaxed text-text-muted">{service.description}</p>
+            <p className="mt-6 border-l-2 border-amber-ink pl-4 text-text-base leading-relaxed">
+              <span className="block text-xs font-mono uppercase tracking-wider text-amber-ink mb-1">In plain terms</span>
+              {service.plainEnglish}
             </p>
 
-            <div className="bg-glass-bg border border-border-base rounded-3xl p-8 mb-12 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-4 opacity-10">
-                <Shield className="w-24 h-24" />
-              </div>
-              <h3 className="text-xs font-black uppercase tracking-widest text-secondary mb-4 flex items-center gap-2">
-                <Zap className="w-4 h-4" />
-                The Core Advantage
-              </h3>
-              <p className="text-text-base leading-relaxed italic text-lg pr-12">
-                "{service.plainEnglish}"
+            <h2 className="mt-12 text-2xl font-semibold tracking-tight">What's included</h2>
+            <ul className="mt-5 grid sm:grid-cols-2 gap-3">
+              {service.included.map(item => (
+                <li key={item} className="flex items-start gap-3 rounded-xl border border-border-base bg-surface p-4 text-sm">
+                  <CheckCircle2 className="w-5 h-5 shrink-0 text-ok" aria-hidden="true" />
+                  <span className="text-text-muted">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+
+          <Reveal delay={0.1} className="lg:sticky lg:top-28">
+            <aside aria-label={`Contact CYFY about ${service.title}`} className="rounded-2xl border border-border-base bg-surface p-6 md:p-8 shadow-xl shadow-black/10">
+              <h2 className="text-xl font-semibold">{service.cta}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                Tell us about your environment and what you need. A CYFY security specialist will reply to discuss scope.
               </p>
-            </div>
-
-            <div className="space-y-12">
-              <div>
-                <h3 className="text-xl font-bold mb-6 flex items-center gap-3 text-text-base">
-                  <Target className="w-5 h-5 text-primary" />
-                  Key Features & Capabilities
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {[
-                    "Continuous Vulnerability Assessment",
-                    "Advanced Threat Intelligent Integration",
-                    "Real-time Incident Response & Documentation",
-                    "Regulatory Compliance Alignment (ISO/HIPAA)",
-                    "Adversarial Simulation & Stress Testing",
-                    "Comprehensive Executive Reporting"
-                  ].map((feature, i) => (
-                    <div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-glass-bg border border-border-base hover:border-primary/30 transition-colors">
-                      <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="text-sm text-text-muted font-medium">{feature}</span>
-                    </div>
-                  ))}
-                </div>
+              <div className="mt-6 flex flex-col gap-3">
+                <PrimaryButton to={enquiryHref(service.interest)}>{service.cta} <ArrowRight className="w-4 h-4" aria-hidden="true" /></PrimaryButton>
+                <SecondaryButton href={`mailto:${CONTACT_INFO.email}?subject=${encodeURIComponent(`Enquiry: ${service.title}`)}`}>
+                  <Mail className="w-4 h-4" aria-hidden="true" /> Email {CONTACT_INFO.email}
+                </SecondaryButton>
               </div>
-            </div>
-          </motion.div>
-
-          {/* Visualization/Stat side */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="space-y-8"
-          >
-            <div className="glass rounded-[40px] p-10 border-border-base relative overflow-hidden">
-               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-               
-               <h3 className="text-2xl font-bold mb-8 text-text-base flex items-center gap-3">
-                 <BarChart3 className="w-6 h-6 text-primary" />
-                 Engagement Metrics
-               </h3>
-
-               <div className="space-y-8 relative z-10">
-                 {[
-                   { label: "Threat Mitigation Speed", value: "99.9%", delay: 0.3 },
-                   { label: "Operational Resilience", value: "24/7", delay: 0.4 },
-                   { label: "Compliance Score Improvement", value: "+45%", delay: 0.5 }
-                 ].map((stat, i) => (
-                   <div key={i}>
-                     <div className="flex justify-between items-end mb-2">
-                       <span className="text-xs font-bold uppercase tracking-widest text-text-muted">{stat.label}</span>
-                       <span className="text-2xl font-black text-primary">{stat.value}</span>
-                     </div>
-                     <div className="w-full h-1 bg-black/5 dark:bg-white/10 light:bg-black/5 rounded-full overflow-hidden">
-                       <motion.div
-                         initial={{ width: 0 }}
-                         whileInView={{ width: "100%" }}
-                         transition={{ duration: 1.5, delay: stat.delay }}
-                         className="h-full bg-primary"
-                       />
-                     </div>
-                   </div>
-                 ))}
-               </div>
-
-               <div className="mt-12 p-8 rounded-3xl bg-primary/5 border border-primary/20">
-                 <div className="flex items-center gap-4 mb-4">
-                   <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
-                     <Users className="w-6 h-6" />
-                   </div>
-                   <h4 className="font-bold text-text-base">Speak with an Expert</h4>
-                 </div>
-                 <p className="text-sm text-text-muted mb-6">
-                   Ready to enhance your {service.title} capabilities? Our strategic team is standing by for a deep-dive consultation.
-                 </p>
-                 <button className="w-full py-4 bg-primary text-white rounded-xl font-bold uppercase tracking-widest text-[10px] hover:bg-primary/80 transition-all shadow-lg shadow-primary/20">
-                   Request Strategic Briefing
-                 </button>
-               </div>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-6 rounded-3xl bg-secondary/5 border border-secondary/20 text-center">
-                <p className="text-3xl font-black text-secondary mb-1">0.1s</p>
-                <p className="text-[8px] font-bold uppercase tracking-widest text-text-muted">Latency Threshold</p>
-              </div>
-              <div className="p-6 rounded-3xl bg-emerald-500/5 border border-emerald-500/20 text-center">
-                <p className="text-3xl font-black text-emerald-500 mb-1">ISO</p>
-                <p className="text-[8px] font-bold uppercase tracking-widest text-text-muted">Compliant Method</p>
-              </div>
-            </div>
-          </motion.div>
+            </aside>
+          </Reveal>
         </div>
+
+        {SOC_SLUGS.includes(service.slug) && <SocDetail />}
+
+        {related.length > 0 && (
+          <section aria-labelledby="related-services" className="mt-20">
+            <h2 id="related-services" className="text-2xl font-semibold tracking-tight">Related services</h2>
+            <ul className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {related.map(r => (
+                <li key={r.slug}>
+                  <Link to={`/service/${r.slug}`} className="group flex h-full flex-col rounded-2xl border border-border-base bg-surface p-6 transition-colors hover:border-brand-ink">
+                    <r.icon className="w-5 h-5 text-brand-ink" aria-hidden="true" />
+                    <span className="mt-4 font-semibold group-hover:text-brand-ink transition-colors">{r.title}</span>
+                    <span className="mt-1.5 text-sm leading-relaxed text-text-muted">{r.description}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     </div>
   );
+}
+
+export default function ServiceDetailPage() {
+  const { slug } = useParams<{ slug: string }>();
+  const service = serviceBySlug(slug);
+  return service ? <ServiceDetail service={service} /> : <ServiceNotFound />;
 }

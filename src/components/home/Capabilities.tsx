@@ -4,6 +4,10 @@ import { AnimatePresence, motion } from 'motion/react';
 import { ArrowRight, Plus } from 'lucide-react';
 import { CAPABILITY_TABS } from '../../homeContent';
 import { SectionHeader, useHashSelect } from './ui';
+import { enquiryHref, type EnquiryInterest } from '../../constants';
+
+// "Ask about this" preselects the matching topic in the enquiry form
+const TAB_INTEREST: Record<string, EnquiryInterest> = { operate: 'managed-soc', test: 'assessment', comply: 'advisory' };
 
 export default function Capabilities() {
   const [tabId, setTabId] = useState(CAPABILITY_TABS[0].id);
@@ -90,7 +94,7 @@ export default function Capabilities() {
                       )}
                     </AnimatePresence>
                     <Link
-                      to={item.href ?? '/#contact'}
+                      to={item.href ?? enquiryHref(TAB_INTEREST[tab.id] ?? 'other')}
                       className={`mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-ink transition-opacity ${isOpen ? 'opacity-100' : 'opacity-80 group-hover:opacity-100'}`}
                     >
                       {item.href ? 'Learn more' : 'Ask about this'} <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />

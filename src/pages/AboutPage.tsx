@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { usePageMeta } from '../lib/usePageMeta';
 import { BadgeCheck, Briefcase, Database, Network, Cloud, Factory, BrainCircuit, Radar, ClipboardCheck, ScanSearch, Mail, Phone, MapPin, type LucideIcon } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
 import { Reveal, Eyebrow, SectionHeader, PrimaryButton, SecondaryButton } from '../components/home/ui';
@@ -27,7 +27,7 @@ const SERVICES: Service[] = [
 
 const LEADERS = [
   {
-    image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.ctfassets.net%2Fwkud0epjdpn7%2F1CmlPkNN2jPbkyy5GkRk8x%2F2a32aad7c3559d9b9d145b768e91a2fb%2FRakesh_Reddy_ISB_CYSL.png%3Ffm%3Dwebp&f=1&nofb=1&ipt=2acaa90926bb0663844324af5a7c22cfb1da0af525117fd6408e3dddc4353e1a&ipo=images',
+    image: new URL('../assets/people/rakesh-reddy-gaddam.webp', import.meta.url).href,
     name: 'Rakesh Reddy Gaddam',
     title: 'Founder, CEO & Managing Director',
     bio: 'A visionary leader with 20+ years of experience in network and cybersecurity. He has spearheaded large-scale digital transformation and security initiatives for global enterprises. His mission for CYFY is to empower businesses with proactive security platforms that allow them to innovate with confidence.',
@@ -42,11 +42,10 @@ const LEADERS = [
 const initials = (name: string) => name.split(' ').filter(Boolean).map(w => w[0]).slice(0, 2).join('');
 
 export default function AboutPage() {
-  useEffect(() => {
-    const prev = document.title;
-    document.title = 'About CYFY | CYFY Solutions';
-    return () => { document.title = prev; };
-  }, []);
+  usePageMeta({
+    title: 'About CYFY | CYFY Solutions',
+    description: 'CYFY Solutions Pvt. Ltd. is an ISO/IEC 27001:2022 certified cybersecurity and managed security services provider based in Hyderabad, serving regulated enterprises.',
+  });
 
   return (
     <>
@@ -138,13 +137,13 @@ export default function AboutPage() {
       </section>
 
       {/* Contact */}
-      <section id="talk-to-cyfy" aria-label="Contact CYFY" className="scroll-mt-28 pb-20 md:pb-28">
+      <section id="contact" aria-labelledby="about-contact-title" className="scroll-mt-28 pb-20 md:pb-28">
         <div className="shell">
           <Reveal>
             <div className="rounded-2xl border border-border-base bg-surface-2 p-6 md:p-10 grid lg:grid-cols-[1fr_auto] gap-8 items-center">
               <div>
                 <Eyebrow>Contact</Eyebrow>
-                <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Talk to CYFY</h2>
+                <h2 id="about-contact-title" className="text-2xl md:text-3xl font-semibold tracking-tight">Talk to CYFY</h2>
                 <ul className="mt-6 space-y-3 text-sm md:text-base">
                   <li className="flex items-start gap-3">
                     <Mail className="w-5 h-5 mt-0.5 shrink-0 text-brand-ink" aria-hidden="true" />
@@ -161,7 +160,7 @@ export default function AboutPage() {
                 </ul>
               </div>
               <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
-                <PrimaryButton to="/#contact">Talk to your security expert</PrimaryButton>
+                <PrimaryButton to="/#contact">Talk to a Security Expert</PrimaryButton>
                 <SecondaryButton href={`mailto:${CONTACT_INFO.email}`}>Email us</SecondaryButton>
               </div>
             </div>

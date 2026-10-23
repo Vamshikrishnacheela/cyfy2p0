@@ -187,10 +187,10 @@ export default function Hero() {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <Link to="/#contact" className="inline-flex items-center justify-center gap-2 rounded-lg bg-btn px-6 py-3.5 text-sm font-semibold text-white hover:bg-btn-hover transition-colors">
-              Talk to your security expert
+              Talk to a Security Expert
             </Link>
             <Link to="/#services" className="group inline-flex items-center justify-center gap-2 rounded-lg border border-border-strong bg-surface/60 px-6 py-3.5 text-sm font-semibold text-text-base hover:border-brand-ink transition-colors">
-              Explore CYFY
+              Explore Our Services
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
             </Link>
           </div>

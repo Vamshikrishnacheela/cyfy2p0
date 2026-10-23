@@ -15,7 +15,25 @@ export const HERO_METRICS: Metric[] = [
   { icon: Target, value: '1,000+', label: 'MITRE ATT&CK detection use cases' },
 ];
 
-export const CLIENTS = [ 'Sahi', 'TradeWell', 'TheraNym Biologics', 'Interpolitan Money', 'Marico', 'Pi Health Industries', 'IHCL', 'HPCL' ];
+// Client logos in CYFY's display order. Files in src/assets/clients are the official logos from each client's own
+// website, cropped to their artwork and resized; never recoloured. `plate` is the tile colour behind the logo: white for
+// logos designed for light backgrounds, dark for IHCL's white header logo. `ratio` is width / height of the file.
+// Blackbit (12th in the list) is omitted until CYFY supplies its official logo; the company could not be identified.
+const clientLogo = (file: string) => new URL(`./assets/clients/${file}`, import.meta.url).href;
+export const CLIENT_LOGOS: LogoItem[] = [
+  { name: 'Sahi', logo: clientLogo('sahi.svg'), plate: '#ffffff', ratio: 2.28 },
+  { name: 'TradeWell', logo: clientLogo('tradewell.png'), plate: '#ffffff', ratio: 5.00 },
+  { name: 'TheraNym Biologics', logo: clientLogo('theranym-biologics.png'), plate: '#ffffff', ratio: 2.36 },
+  { name: 'Interpolitan Money', logo: clientLogo('interpolitan-money.png'), plate: '#ffffff', ratio: 10.98 },
+  { name: 'Marico', logo: clientLogo('marico.png'), plate: '#ffffff', ratio: 1.00 },
+  { name: "Dr. Reddy's", logo: clientLogo('dr-reddys.png'), plate: '#ffffff', ratio: 4.62 },
+  { name: 'Aurigene Pharmaceuticals', logo: clientLogo('aurigene-pharmaceutical-services.png'), plate: '#ffffff', ratio: 1.69 },
+  { name: 'Amara Raja Batteries', logo: clientLogo('amara-raja.png'), plate: '#ffffff', ratio: 8.49 },
+  { name: 'Pi Health Industries', logo: clientLogo('pi-health.png'), plate: '#ffffff', ratio: 1.06 },
+  { name: 'IHCL', logo: clientLogo('ihcl.png'), plate: '#111418', ratio: 2.92 },
+  { name: 'HPCL', logo: clientLogo('hpcl.png'), plate: '#ffffff', ratio: 5.30 },
+  { name: 'Aurobindo Pharmaceuticals', logo: clientLogo('aurobindo-pharma.png'), plate: '#ffffff', ratio: 2.06 },
+];
 
 export const WHY_STATS = [
   { value: 30, suffix: '+', label: 'IT, network and security OEM partnerships' },
@@ -72,16 +90,72 @@ export const SOC_PILLARS = [
   { icon: Zap, title: 'Fast response', body: 'SOAR playbooks contain threats, with a 30 minute MTTR on the premium tier.' },
 ];
 
-export const SOC_SOURCES: { icon: LucideIcon; label: string }[] = [
-  { icon: Server, label: 'Endpoints and servers' },
-  { icon: Flame, label: 'Firewalls and IDS' },
-  { icon: AppWindow, label: 'Trading and core apps' },
-  { icon: Cloud, label: 'AWS, Azure and GCP' },
-  { icon: Fingerprint, label: 'Active Directory' },
-  { icon: Factory, label: 'OT systems' },
+export type SocStageId = 'detect' | 'triage' | 'respond';
+export interface SocSource {
+  icon: LucideIcon; label: string;
+  /** Panel heading and one-line summary when this source is selected */
+  heading: string; summary: string;
+  /** What each SOC stage means for this source. Qualified wording: scope and response actions are agreed per client. */
+  stages: Record<SocStageId, string>;
+}
+export const SOC_SOURCES: SocSource[] = [
+  {
+    icon: Server, label: 'Endpoints and servers', heading: 'Endpoint and server monitoring',
+    summary: 'Endpoint and server logs, including alerts from your EDR or XDR tools, collected in the SIEM and watched around the clock.',
+    stages: {
+      detect: 'Look for suspicious processes, malware indicators, unusual logins and endpoint security alerts.',
+      triage: 'Correlate endpoint events with user activity, asset context and related alerts to judge severity.',
+      respond: 'Escalate confirmed threats to your team and support containment or remediation under the agreed response process.',
+    },
+  },
+  {
+    icon: Flame, label: 'Firewalls and IDS', heading: 'Network threat detection',
+    summary: 'Firewall and IDS logs that show what is crossing your perimeter and moving between network segments.',
+    stages: {
+      detect: 'Look for suspicious traffic, intrusion alerts, unusual connections and possible policy violations.',
+      triage: 'Correlate firewall and IDS events with related activity to separate real threats from routine traffic.',
+      respond: 'Escalate validated incidents and coordinate blocking, rule changes or further investigation with the team that owns the network.',
+    },
+  },
+  {
+    icon: AppWindow, label: 'Trading and core apps', heading: 'Trading and core application monitoring',
+    summary: 'Application and authentication logs from the systems your business cannot afford to have go down.',
+    stages: {
+      detect: 'Look for abnormal application events, authentication anomalies, unexpected access patterns and application security alerts.',
+      triage: 'Correlate application logs with user sessions and system events to understand the possible business impact.',
+      respond: 'Prioritise incidents that affect critical applications and coordinate investigation, escalation and recovery with the application owners.',
+    },
+  },
+  {
+    icon: Cloud, label: 'AWS, Azure and GCP', heading: 'Cloud security monitoring',
+    summary: 'Audit, identity and security logs from your AWS, Azure and GCP accounts, monitored alongside the rest of your estate.',
+    stages: {
+      detect: 'Look for suspicious cloud activity, risky configuration changes, unusual access and cloud security alerts.',
+      triage: 'Correlate cloud audit logs, identity events and available workload alerts to investigate what happened.',
+      respond: 'Escalate cloud incidents and coordinate remediation with your cloud or infrastructure team.',
+    },
+  },
+  {
+    icon: Fingerprint, label: 'Active Directory', heading: 'Identity and access threat monitoring',
+    summary: 'Directory and authentication events, where account misuse and privilege escalation often show up first.',
+    stages: {
+      detect: 'Look for suspicious sign-in patterns, privilege changes, account misuse and other directory security events.',
+      triage: 'Correlate account activity, authentication events and privilege changes to assess whether an identity is compromised.',
+      respond: 'Escalate suspected account compromise and coordinate approved containment, access review or remediation.',
+    },
+  },
+  {
+    icon: Factory, label: 'OT systems', heading: 'Operational technology security monitoring',
+    summary: 'Logs and alerts from supported industrial systems, handled with plant safety and availability in mind.',
+    stages: {
+      detect: 'Look for suspicious OT events, unusual communication patterns and alerts from supported industrial systems.',
+      triage: 'Assess alerts using the available OT telemetry, asset criticality and operational context, weighing safety and availability impact.',
+      respond: 'Escalate through the agreed OT response process and coordinate with authorised OT staff before any action that could affect operations.',
+    },
+  },
 ];
 
-export const SOC_STAGES = [
+export const SOC_STAGES: { id: SocStageId; label: string; status: string; body: string }[] = [
   { id: 'detect', label: 'Detect', status: 'Normalising logs', body: 'Logs from every source are normalised in the SIEM and correlated against 1,000+ MITRE ATT&CK use cases.' },
   { id: 'triage', label: 'Triage', status: 'L1 triage, L2 validating', body: 'L1 analysts triage the alert, L2 validates it, and L3 investigates before escalating to a SOC lead.' },
   { id: 'respond', label: 'Respond', status: 'Containing threat', body: 'A SOAR playbook contains the threat. Premium-tier clients get a 30 minute mean time to respond.' },
@@ -97,7 +171,7 @@ export const CAPABILITY_TABS: CapabilityTab[] = [
     lead: { title: 'We run it, day and night.', body: 'Managed operations for the infrastructure and security stack you depend on, under one SLA.' },
     items: [
       { title: 'Managed SOC', icon: ShieldCheck, body: '24/7 detection, triage and response with L1 to L3 analysts.', plain: '24/7 digital guards: AI-powered surveillance that monitors your systems like a global security team.', href: '/service/ai-soc' },
-      { title: 'Network and NOC', icon: Network, body: 'Network as a service, 24/7 infrastructure monitoring and AIOps.' },
+      { title: 'Network and NOC', icon: Network, body: 'Network as a service, 24/7 infrastructure monitoring and AIOps.', href: '/service/secure-architecture' },
       { title: 'Cloud, identity and data', icon: Cloud, body: 'CSPM, CNAPP, IAM, PAM and DLP, built with leading OEMs.', plain: 'Ensuring that your data stored in the cloud stays private and protected.', href: '/service/cloud-security' },
       { title: 'OT and IoT security', icon: Factory, body: 'IT/OT segmentation to IEC 62443 and secure remote access.' },
       { title: 'Security for AI', icon: Brain, body: 'Shadow AI control and protection for enterprise LLMs and copilots.' },
@@ -182,14 +256,16 @@ export const ADVISORIES: Advisory[] = [
   },
 ];
 
-export const CASES = [
+// Client names are withheld; each case is identified by sector only.
+export interface CaseStudy { industry: string; icon: LucideIcon; metric: string; label: string; body: string; industryId: string }
+export const CASES: CaseStudy[] = [
   {  industry: 'Capital markets', icon: Landmark, metric: '6/6', label: 'SEBI CSCRF pillars assessed and remediated', body: 'Gap assessment, VAPT on trading systems and a 24/7 managed SOC ahead of the audit window.', industryId: 'bfsi' },
   {  industry: 'Wealth management', icon: Building2, metric: '24/7', label: 'SOC coverage on a high-trust wealth platform', body: 'SIEM monitoring with L1 to L3 escalation and a weekly CISO advisory.', industryId: 'bfsi' },
   {  industry: 'Pharmaceuticals', icon: Pill, metric: 'Part 11', label: 'FDA 21 CFR controls mapped and monitored', body: 'Continuous monitoring of validated systems with audit-ready evidence.', industryId: 'pharma' },
 ];
 
 export const FOUNDER_NOTE = {
-  image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.ctfassets.net%2Fwkud0epjdpn7%2F1CmlPkNN2jPbkyy5GkRk8x%2F2a32aad7c3559d9b9d145b768e91a2fb%2FRakesh_Reddy_ISB_CYSL.png%3Ffm%3Dwebp&f=1&nofb=1&ipt=2acaa90926bb0663844324af5a7c22cfb1da0af525117fd6408e3dddc4353e1a&ipo=images',
+  image: new URL('./assets/people/rakesh-reddy-gaddam.webp', import.meta.url).href,
   greeting: 'To every security leader in a regulated business,',
   paragraphs: [
     'We built CYFY to move enterprise networks and security from reactive to proactive. Too many teams run a dozen point tools and still find out about incidents from their customers.',
@@ -229,7 +305,9 @@ export const INDUSTRIES: Industry[] = [
 
 export const FRAMEWORKS = ['SEBI CSCRF', 'RBI', 'IRDAI', 'ISO 27001', 'ISO 42001', 'SOC 2', 'PCI DSS', 'HIPAA', 'GDPR', 'NIST CSF', 'IEC 62443'];
 
-export interface PartnerLogo { name: string; logo: string; plate: string; ratio: number }
+/** A logo tile in a LogoMarquee. `plate` is the tile colour behind the logo; `ratio` is the file's width / height. */
+export interface LogoItem { name: string; logo: string; plate: string; ratio: number }
+export type PartnerLogo = LogoItem;
 // Partner logos as published on https://www.cyfy.ai/our-partners (organisations identified from the artwork).
 // Files are the originals with empty margins trimmed; `plate` matches each logo's own background
 // (SentinelOne's white wordmark sits on a dark plate), so no logo is recoloured or filtered. `ratio` is width / height of the file.
@@ -251,12 +329,14 @@ export const PARTNERS: PartnerLogo[] = [
 ];
 
 export const FOOTER_COLUMNS = [
+  // Labels match the canonical service titles in constants.ts SERVICES
   { title: 'Services', links: [
     { label: 'Managed SOC', to: '/service/ai-soc' },
-    { label: 'Network and NOC', to: '/#capabilities' },
-    { label: 'VAPT', to: '/service/web-app-pentest' },
-    { label: 'Attack surface management', to: '/#platform' },
-    { label: 'vCISO', to: '/service/vciso-services' },
+    { label: 'VAPT and Pentesting', to: '/service/web-app-pentest' },
+    { label: 'Cloud Security', to: '/service/cloud-security' },
+    { label: 'Secure Architecture and Network', to: '/service/secure-architecture' },
+    { label: 'vCISO and GRC', to: '/service/vciso-services' },
+    { label: 'All services', to: '/#services' },
   ] },
   { title: 'Industries', links: [
     { label: 'BFSI and capital markets', to: '/#industries' },
@@ -268,12 +348,11 @@ export const FOOTER_COLUMNS = [
     { label: 'CyShield Pro', product: 'cyshield' as const, to: '/#platform' },
     { label: 'Cynapptics', product: 'cynapptics' as const, to: '/#platform-cynapptics' },
   ] },
-  { title: 'Resources', links: [
-    { label: 'Customer stories', to: '/#customers' },
-  ] },
   { title: 'Company', links: [
-    { label: 'About CYFY', to: '/#why-cyfy' },
+    { label: 'About CYFY', to: '/about' },
+    { label: 'Customer stories', to: '/#customers' },
     { label: 'Partners', to: '/#partners' },
-    { label: 'Contact', to: '/#contact' },
+    { label: 'Events', to: '/events' },
+    { label: 'Contact', to: '/about#contact' },
   ] },
 ];

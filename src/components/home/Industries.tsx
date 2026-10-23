@@ -73,9 +73,9 @@ export default function Industries() {
               </ul>
               <div className="mt-auto pt-6 flex flex-wrap items-center justify-between gap-3">
                 {related.length > 0
-                  ? <TextLink to="/#customers">Related: {related.map(r => r.org).join(', ')}</TextLink>
+                  ? <TextLink to="/#customers">Related customer {related.length > 1 ? 'stories' : 'story'}</TextLink>
                   : <span />}
-                <TextLink to="/#contact">Talk to your security expert</TextLink>
+                <TextLink to="/#contact">Talk to a Security Expert</TextLink>
               </div>
             </div>
           </motion.div>

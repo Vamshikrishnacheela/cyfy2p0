@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from 'react';
 import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { Eyebrow } from '../components/home/ui';
+import { usePageMeta } from '../lib/usePageMeta';
 
 interface EventPhoto { src: string; alt: string; portrait?: boolean }
 
@@ -215,11 +216,10 @@ function PhotoCarousel({ photos, label, autoplayMs, stepByPage }: { photos: Even
 }
 
 export default function EventsPage() {
-  useEffect(() => {
-    const prev = document.title;
-    document.title = 'Events | CYFY Solutions';
-    return () => { document.title = prev; };
-  }, []);
+  usePageMeta({
+    title: 'Events | CYFY Solutions',
+    description: 'Photos from CYFY events, including the CYFY 2nd Anniversary 2026 and Cyber Dome 2025.',
+  });
 
   return (
     // Same background stack as the homepage hero: theme-aware gradient, technical grid and ambient glow

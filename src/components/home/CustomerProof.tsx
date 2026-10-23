@@ -26,10 +26,10 @@ export default function CustomerProof() {
           {CASES.map((c, i) => {
             const industry = INDUSTRIES.find(x => x.id === c.industryId)!;
             return (
-              <Reveal key={c.org} delay={i * 0.08}>
+              <Reveal key={c.label} delay={i * 0.08}>
                 <article className="group relative h-full flex flex-col rounded-2xl border border-border-base bg-surface p-6 md:p-7 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10 hover:border-border-strong">
                   <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-ink to-amber-ink" aria-hidden="true" />
-                  <p className="text-sm font-medium text-text-muted">{c.org}</p>
+                  <p className="text-sm font-medium text-text-muted">Client name withheld</p>
                   <p className="mt-5 flex items-center gap-1.5 text-xs font-medium text-amber-ink">
                     <c.icon className="w-3.5 h-3.5" aria-hidden="true" /> {c.industry}
                   </p>

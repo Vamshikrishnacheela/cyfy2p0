@@ -12,12 +12,17 @@ export default function Newsletter() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    const clean = email.trim();
+    if (!/^[^@s]+@[^@s]+.[^@s]+$/.test(clean) || clean.length > 256) {
+      setStatus('error');
+      setErrorMessage('Enter a valid email address, like name@yourfirm.in.');
+      return;
+    }
 
     setStatus('submitting');
     try {
       await addDoc(collection(db, 'newsletter'), {
-        email,
+        email: clean,
         subscribedAt: serverTimestamp()
       });
       setStatus('success');
@@ -25,7 +30,7 @@ export default function Newsletter() {
     } catch (error: any) {
       console.error("Newsletter subscription error:", error);
       setStatus('error');
-      setErrorMessage(error.message || 'Failed to subscribe');
+      setErrorMessage('We couldn\x27t subscribe you just now. Please try again later.');
       // handleFirestoreError(error, 'create'); // This would throw and crash the UI, we handle it locally here
     }
   };
@@ -55,8 +60,8 @@ export default function Newsletter() {
                 className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-8 flex flex-col items-center"
               >
                 <CheckCircle2 className="w-12 h-12 text-emerald-500 mb-4" />
-                <h3 className="text-emerald-500 font-bold uppercase tracking-widest text-sm">Deployment Successful</h3>
-                <p className="text-text-muted text-sm mt-2">You are now enrolled in the CYFY Intelligence Feed.</p>
+                <h3 className="text-emerald-500 font-bold uppercase tracking-widest text-sm">Subscribed</h3>
+                <p className="text-text-muted text-sm mt-2">You will receive CYFY threat intelligence briefings by email.</p>
                 <button 
                   onClick={() => setStatus('idle')}
                   className="mt-6 text-[10px] font-bold uppercase tracking-widest text-emerald-500/70 hover:text-emerald-500 transition-colors"
@@ -70,19 +75,25 @@ export default function Newsletter() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
+                noValidate
                 onSubmit={handleSubmit}
                 className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto"
               >
                 <div className="flex-1 relative">
+                  <label htmlFor="newsletter-email" className="sr-only">Email address</label>
                   <input
+                    id="newsletter-email"
                     type="email"
+                    autoComplete="email"
+                    aria-invalid={status === 'error'}
+                    aria-describedby={status === 'error' ? 'newsletter-error' : undefined}
                     required
                     placeholder="intelligence@yourcompany.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-black/[0.03] dark:bg-white/[0.03] light:bg-black/[0.04] border border-border-base rounded-xl py-4 px-6 text-text-base focus:outline-none focus:border-primary transition-all"
                   />
-                  <Send className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-700 pointer-events-none" />
+                  <Send className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-subtle pointer-events-none" aria-hidden="true" />
                 </div>
                 <button
                   type="submit"
@@ -103,8 +114,8 @@ export default function Newsletter() {
           </AnimatePresence>
 
           {status === 'error' && (
-            <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest mt-4">
-              Error: {errorMessage}
+            <p id="newsletter-error" role="alert" className="text-crit text-sm mt-4">
+              {errorMessage}
             </p>
           )}
 

@@ -1,8 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Send, Bot, User, Shield, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { GoogleGenAI } from "@google/genai";
-import { SERVICES, BRAND_NAME, MOTO, CONTACT_INFO } from '../constants';
+import { SERVICES, BRAND_NAME, MOTO, CONTACT_INFO, enquiryHref } from '../constants';
+
+// The key is inlined at build time (vite.config.ts), so it is visible to anyone who loads the site.
+// Production should call Gemini through a server-side proxy instead; without a key the assistant runs in offline mode.
+const AI_ENABLED = Boolean(process.env.GEMINI_API_KEY);
+
+const QUICK_LINKS = [
+  { label: 'Talk to a Security Expert', to: '/#contact' },
+  { label: 'Managed SOC', to: '/service/ai-soc' },
+  { label: 'Request a Security Assessment', to: enquiryHref('assessment') },
+  { label: 'All services', to: '/#services' },
+];
 
 interface Message {
   role: 'user' | 'bot';
@@ -11,11 +23,21 @@ interface Message {
 
 export default function ChatBot({ onClose }: { onClose: () => void }) {
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'bot', content: `Hello! I'm the ${BRAND_NAME} Virtual Assistant. How can I help you today? I can tell you about our AI SOC, Managed Services, or help you with security consulting.` }
+    { role: 'bot', content: AI_ENABLED
+      ? `Hello! I'm the ${BRAND_NAME} Virtual Assistant. How can I help you today? I can tell you about our Managed SOC, managed security services, or help you with security consulting.`
+      : `Hello! The ${BRAND_NAME} assistant is not available right now. Choose a link below, or email ${CONTACT_INFO.email} and our team will get back to you.` }
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onClose]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -24,7 +46,7 @@ export default function ChatBot({ onClose }: { onClose: () => void }) {
   }, [messages, isTyping]);
 
   const handleSend = async () => {
-    if (!input.trim() || isTyping) return;
+    if (!input.trim() || isTyping || !AI_ENABLED) return;
 
     const userMessage = input.trim();
     setInput('');
@@ -55,7 +77,7 @@ export default function ChatBot({ onClose }: { onClose: () => void }) {
       setMessages(prev => [...prev, { role: 'bot', content: botResponse }]);
     } catch (error) {
       console.error("Gemini Error:", error);
-      setMessages(prev => [...prev, { role: 'bot', content: `Our AI is currently undergoing security updates. Please reach out to ${CONTACT_INFO.email} directly.` }]);
+      setMessages(prev => [...prev, { role: 'bot', content: `Sorry, I couldn't get an answer just now. Please use the contact form or email ${CONTACT_INFO.email}.` }]);
     } finally {
       setIsTyping(false);
     }
@@ -66,7 +88,9 @@ export default function ChatBot({ onClose }: { onClose: () => void }) {
       initial={{ opacity: 0, scale: 0.9, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9, y: 20 }}
-      className="fixed bottom-24 right-8 z-[60] w-full max-w-[400px] h-[600px] bg-dark-bg/40 backdrop-blur-3xl rounded-3xl shadow-2xl flex flex-col overflow-hidden text-white border border-white/10"
+      role="dialog"
+      aria-label={`${BRAND_NAME} virtual assistant`}
+      className="fixed bottom-24 inset-x-4 sm:inset-x-auto sm:right-8 sm:w-[400px] z-[115] h-[min(600px,calc(100dvh-8rem))] bg-[#0b0f13]/95 backdrop-blur-xl rounded-3xl shadow-2xl flex flex-col overflow-hidden text-white border border-white/10"
     >
       {/* Header */}
       <div className="chat-bubble-gradient p-6 text-white flex justify-between items-center shrink-0">
@@ -77,11 +101,11 @@ export default function ChatBot({ onClose }: { onClose: () => void }) {
           <div>
             <h3 className="font-bold text-sm tracking-tight">{BRAND_NAME} Virtual Assistant</h3>
             <p className="text-[10px] opacity-70 flex items-center gap-1 uppercase tracking-widest">
-              <Zap className="w-2 h-2 fill-current" /> System Online
+              <Zap className="w-2 h-2 fill-current" aria-hidden="true" /> {AI_ENABLED ? 'Online' : 'Offline'}
             </p>
           </div>
         </div>
-        <button onClick={onClose} className="hover:bg-white/10 p-2 rounded-full transition-colors">
+        <button type="button" onClick={onClose} aria-label="Close chat" className="hover:bg-white/10 p-2 rounded-full transition-colors">
           <X className="w-5 h-5" />
         </button>
       </div>
@@ -94,7 +118,7 @@ export default function ChatBot({ onClose }: { onClose: () => void }) {
               <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-secondary' : 'bg-primary'}`}>
                 {msg.role === 'user' ? <User className="w-4 h-4 text-white" /> : <Bot className="w-4 h-4 text-white" />}
               </div>
-              <div className={`p-4 rounded-2xl text-xs leading-relaxed font-light ${msg.role === 'user' ? 'bg-white/10 text-white rounded-tr-none border border-white/10' : 'bg-white/5 text-gray-300 rounded-tl-none border border-white/5'}`}>
+              <div className={`p-4 rounded-2xl text-sm leading-relaxed ${msg.role === 'user' ? 'bg-white/10 text-white rounded-tr-none border border-white/10' : 'bg-white/5 text-gray-300 rounded-tl-none border border-white/5'}`}>
                 {msg.content}
               </div>
             </div>
@@ -116,6 +140,15 @@ export default function ChatBot({ onClose }: { onClose: () => void }) {
              </div>
            </div>
         )}
+        {!AI_ENABLED && (
+          <ul className="flex flex-wrap gap-2" aria-label="Quick links">
+            {QUICK_LINKS.map(l => (
+              <li key={l.label}>
+                <Link to={l.to} onClick={onClose} className="inline-block rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs text-white hover:border-primary hover:bg-primary/20 transition-colors">{l.label}</Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       {/* Input */}
@@ -125,11 +158,16 @@ export default function ChatBot({ onClose }: { onClose: () => void }) {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="How can I help you today?"
-            className="w-full bg-white/[0.03] border border-white/10 rounded-xl pl-5 pr-14 py-4 text-xs font-light focus:outline-none focus:border-primary transition-all text-white"
+            ref={inputRef}
+            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+            disabled={!AI_ENABLED}
+            aria-label="Message the assistant"
+            placeholder={AI_ENABLED ? 'How can I help you today?' : 'Assistant offline'}
+            className="w-full bg-white/[0.03] border border-white/10 rounded-xl pl-5 pr-14 py-4 text-sm focus:outline-none focus:border-primary transition-all text-white disabled:opacity-50"
           />
           <button 
+            type="button"
+            aria-label="Send message"
             onClick={handleSend}
             disabled={!input.trim() || isTyping}
             className={`absolute right-2 top-2 bottom-2 w-10 flex items-center justify-center rounded-lg transition-all ${input.trim() ? 'bg-primary text-white' : 'bg-white/5 text-gray-500'}`}

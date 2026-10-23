@@ -1,15 +1,13 @@
-import { useEffect, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { AlertTriangle, ArrowLeft } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
+import { usePageMeta } from '../lib/usePageMeta';
 
 /** Shared layout for /privacy-policy and /terms. */
 export function LegalLayout({ title, docTitle, children }: { title: string; docTitle: string; children: ReactNode }) {
-  useEffect(() => {
-    const prev = document.title;
-    document.title = docTitle;
-    return () => { document.title = prev; };
-  }, [docTitle]);
+  // Kept out of search results while the documents are unapproved drafts
+  usePageMeta({ title: docTitle, description: `${title} for the CYFY Solutions website (draft pending CYFY legal approval).`, noindex: true });
 
   return (
     <div className="shell max-w-3xl pt-28 md:pt-36 pb-20 md:pb-28">

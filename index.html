@@ -9,6 +9,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <title>CYFY - 24/7 Network and Security Operations</title>
     <meta name="description" content="CYFY designs, secures and runs network and security operations for enterprises: 24/7 SOC and NOC, threat intelligence and audit-ready GRC from an ISO/IEC 27001:2022 certified organization." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="CYFY Solutions" />
+    <meta property="og:title" content="CYFY - 24/7 Network and Security Operations" />
+    <meta property="og:description" content="CYFY designs, secures and runs network and security operations for enterprises: 24/7 SOC and NOC, threat intelligence and audit-ready GRC from an ISO/IEC 27001:2022 certified organization." />
+    <meta name="theme-color" content="#081217" />
+    <!-- Apply the saved or system theme before first paint so light-mode visitors do not see a dark flash (see ThemeToggle.tsx) -->
+    <script>
+      try {
+        var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        if (t === 'light') document.documentElement.classList.add('light');
+      } catch (e) {}
+    </script>
+    <!-- Facts only from constants.ts CONTACT_INFO; add "url" and "logo" once the production domain is final -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "CYFY Solutions Pvt Ltd",
+        "alternateName": "CYFY",
+        "email": "info@cyfy.ai",
+        "telephone": "+91 99668 84343",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "3rd Floor, PSM Infra, near Kala Jyothi IT Park, Kondapur",
+          "addressLocality": "Hyderabad",
+          "postalCode": "500084",
+          "addressCountry": "IN"
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

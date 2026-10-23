@@ -44,6 +44,26 @@ service cloud.firestore {
       allow create: if isValidLead(incoming()) && isValidId(leadId);
     }
 
+    // --- Enquiries (homepage "Talk to a Security Expert" form) ---
+    match /enquiries/{enquiryId} {
+      // Mirrors the client-side validation in src/components/home/EnquiryForm.tsx
+      function isValidEnquiry(data) {
+        return data.keys().hasAll(['name', 'email', 'company', 'interest', 'message', 'page', 'createdAt']) &&
+               data.keys().size() == 7 &&
+               data.name is string && data.name.size() > 0 && data.name.size() <= 120 &&
+               data.email is string && data.email.size() <= 256 &&
+               data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$') &&
+               data.company is string && data.company.size() > 0 && data.company.size() <= 160 &&
+               data.interest in ['managed-soc', 'assessment', 'architecture', 'advisory', 'other'] &&
+               data.message is string && data.message.size() <= 2000 &&
+               data.page is string && data.page.size() <= 200 &&
+               data.createdAt == request.time;
+      }
+
+      // Create-only: no read, list, update or delete from the client. Enquiries are PII.
+      allow create: if isValidEnquiry(incoming()) && isValidId(enquiryId);
+    }
+
     // --- Blogs ---
     match /blogs/{blogId} {
       function isValidBlog(data) {

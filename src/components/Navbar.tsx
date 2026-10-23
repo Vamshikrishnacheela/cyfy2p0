@@ -5,26 +5,36 @@ import { Link, useLocation } from 'react-router-dom';
 import { CyfyLogo } from './CyfyLogo';
 import ThemeToggle from './ThemeToggle';
 import { INDUSTRIES } from '../homeContent';
-import { CONTACT_INFO as CONTACT } from '../constants';
+import { CONTACT_INFO as CONTACT, SERVICES, SERVICE_GROUPS } from '../constants';
 import { ProductName, type ProductId } from './ProductName';
 
-interface NavItem { label: string; desc?: string; to: string; product?: ProductId }
-interface NavGroup { label: string; to?: string; items?: NavItem[] }
+interface NavItem { label: string; desc?: string; to: string; product?: ProductId; section?: string }
+interface NavGroup { label: string; to?: string; items?: NavItem[]; wide?: boolean }
+
+/** Splits items into consecutive runs that share a section heading (items without one form an untitled run). */
+function sections(items: NavItem[]) {
+  const runs: { title?: string; items: NavItem[] }[] = [];
+  for (const item of items) {
+    const last = runs[runs.length - 1];
+    if (last && last.title === item.section) last.items.push(item);
+    else runs.push({ title: item.section, items: [item] });
+  }
+  return runs;
+}
 
 const NAV: NavGroup[] = [
   { label: 'Home', to: '/' },
-  { label: 'Services', items: [
+  // Generated from the service catalogue so names and links always match the service pages
+  { label: 'Services', wide: true, items: [
     { label: 'All services', desc: 'Network, security and compliance', to: '/#services' },
-    { label: 'SOC', desc: '24/7 detection, triage and response', to: '/service/ai-soc' },
-    { label: 'Network and NOC', desc: '24/7 infrastructure monitoring & AIOps', to: '/service/secure-architecture' },
-    { label: 'VAPT', desc: 'Web, Mobile & Network - Pen. testing', to: '/service/web-app-pentest' },
-    { label: 'GRC and vCISO', desc: 'Audit readiness, maintained all year', to: '/service/vciso-services' },
+    ...SERVICES.map(s => ({ label: s.title, to: `/service/${s.slug}`, section: SERVICE_GROUPS.find(g => g.id === s.group)!.label })),
   ] },
   { label: 'Platform', items: [
     { label: 'CyShield Pro', product: 'cyshield', desc: 'See what an attacker sees', to: '/#platform' },
     { label: 'Cynapptics', product: 'cynapptics', desc: 'Threat intelligence your team can act on', to: '/#platform-cynapptics' },
     { label: 'Day 2 – SecOps', desc: 'Automated response and remediation', to: '/#platform-day2SecOps' },
-    { label: 'CISORA', desc: 'AI enable GRC Platform', to: '/#platform-compaas' },
+    // Hidden until the platform section has CISORA content: its target (#platform-compaas) does not exist
+    // { label: 'CISORA', desc: 'AI-enabled GRC platform', to: '/#platform-compaas' },
 
     // { label: 'How our Security Team works', desc: 'From alert to closure, around the clock', to: '/#soc' },
   ] },
@@ -34,14 +44,11 @@ const NAV: NavGroup[] = [
     { label: 'Comply', desc: 'We keep you audit-ready', to: '/#cap-comply' },
   ] },
   { label: 'Industries', items: INDUSTRIES.map(i => ({ label: i.name, desc: i.who, to: `/#industry-${i.id}` })) },
-  { label: 'Resources', items: [
-    { label: 'Customer stories', desc: 'Proof from regulated teams', to: '/#customers' },
-  ] },
   { label: 'Company', items: [
     { label: 'About CYFY', desc: 'Our profile, services and leadership', to: '/about' },
     { label: 'Partners', desc: '30+ OEM platform partnerships', to: '/#partners' },
     { label: 'Events', desc: 'CYFY at Cyber Dome 2025', to: '/events' },
-    { label: 'Contact', desc: 'Email, phone and office address', to: '/about#talk-to-cyfy' },
+    { label: 'Contact', desc: 'Email, phone and office address', to: '/about#contact' },
   ] },
 ];
 
@@ -141,21 +148,28 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 6 }}
                     transition={{ duration: 0.16 }}
-                    className="absolute left-1/2 -translate-x-1/2 top-full pt-3"
+                    className={`absolute top-full pt-3 ${group.wide ? 'left-0' : 'left-1/2 -translate-x-1/2'}`}
                   >
-                    <ul className="w-80 rounded-xl border border-border-base bg-surface p-2 shadow-2xl shadow-black/20">
-                      {group.items.map(item => (
-                        <li key={item.label}>
-                          <Link to={item.to} onClick={() => setOpenMenu(null)} className="group flex items-start justify-between gap-3 rounded-lg px-3 py-2.5 hover:bg-surface-2 transition-colors">
-                            <span>
-                              <span className="block text-sm font-medium text-text-base group-hover:text-brand-ink transition-colors">{item.product ? <ProductName id={item.product} /> : item.label}</span>
-                              {item.desc && <span className="block text-xs text-text-muted mt-0.5">{item.desc}</span>}
-                            </span>
-                            <ArrowRight className="w-3.5 h-3.5 mt-1 text-text-subtle opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" aria-hidden="true" />
-                          </Link>
-                        </li>
+                    <div className={`rounded-xl border border-border-base bg-surface p-2 shadow-2xl shadow-black/20 whitespace-normal ${group.wide ? 'w-[38rem] grid grid-cols-2 gap-x-2' : 'w-80'}`}>
+                      {sections(group.items).map((sec, si) => (
+                        <div key={sec.title ?? si} className={group.wide && !sec.title ? 'col-span-2 border-b border-border-base mb-1 pb-1' : ''}>
+                          {sec.title && <p className="px-3 pt-3 pb-1 font-mono text-[10px] uppercase tracking-[0.12em] text-amber-ink">{sec.title}</p>}
+                          <ul>
+                            {sec.items.map(item => (
+                              <li key={item.label}>
+                                <Link to={item.to} onClick={() => setOpenMenu(null)} className="group flex items-start justify-between gap-3 rounded-lg px-3 py-2.5 hover:bg-surface-2 transition-colors">
+                                  <span>
+                                    <span className="block text-sm font-medium text-text-base group-hover:text-brand-ink transition-colors">{item.product ? <ProductName id={item.product} /> : item.label}</span>
+                                    {item.desc && <span className="block text-xs text-text-muted mt-0.5">{item.desc}</span>}
+                                  </span>
+                                  <ArrowRight className="w-3.5 h-3.5 mt-1 shrink-0 text-text-subtle opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" aria-hidden="true" />
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -165,12 +179,12 @@ export default function Navbar() {
 
         <div className="flex items-center gap-2 md:gap-3">
           {/* Icon-only between 1280px and 1440px, where the full desktop menu leaves no room for the label */}
-          <a href={CONTACT.phoneHref} title="Report an incident" className="hidden md:inline-flex items-center gap-1.5 px-2 text-sm font-medium text-amber-ink hover:opacity-80 transition-opacity">
+          {/* <a href={CONTACT.phoneHref} title="Report an incident" className="hidden md:inline-flex items-center gap-1.5 px-2 text-sm font-medium text-amber-ink hover:opacity-80 transition-opacity">
             <Phone className="w-4 h-4" aria-hidden="true" />
             <span className="xl:max-[1439px]:sr-only">Report an incident</span>
-          </a>
+          </a> */}
           <Link to="/#contact" className="hidden sm:inline-flex items-center rounded-lg bg-btn px-4 py-2.5 text-sm font-semibold text-white hover:bg-btn-hover transition-colors">
-            Talk to your security expert
+            Talk to a Security Expert
           </Link>
           <ThemeToggle />
           <button
@@ -209,16 +223,23 @@ export default function Navbar() {
                         <ChevronDown className={`w-4 h-4 text-text-muted transition-transform ${mobileGroup === group.label ? 'rotate-180' : ''}`} aria-hidden="true" />
                       </button>
                       {mobileGroup === group.label && (
-                        <ul className="pb-3 space-y-1">
-                          {group.items.map(item => (
-                            <li key={item.label}>
-                              <Link to={item.to} className="block rounded-lg px-3 py-2.5 hover:bg-surface-2">
-                                <span className="block text-sm font-medium text-text-base">{item.product ? <ProductName id={item.product} /> : item.label}</span>
-                                {item.desc && <span className="block text-xs text-text-muted">{item.desc}</span>}
-                              </Link>
-                            </li>
+                        <div className="pb-3">
+                          {sections(group.items).map((sec, si) => (
+                            <div key={sec.title ?? si}>
+                              {sec.title && <p className="px-3 pt-3 pb-1 font-mono text-[10px] uppercase tracking-[0.12em] text-amber-ink">{sec.title}</p>}
+                              <ul className="space-y-1">
+                                {sec.items.map(item => (
+                                  <li key={item.label}>
+                                    <Link to={item.to} className="block rounded-lg px-3 py-2.5 hover:bg-surface-2">
+                                      <span className="block text-sm font-medium text-text-base">{item.product ? <ProductName id={item.product} /> : item.label}</span>
+                                      {item.desc && <span className="block text-xs text-text-muted">{item.desc}</span>}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
                           ))}
-                        </ul>
+                        </div>
                       )}
                     </>
                   ) : (
@@ -228,10 +249,10 @@ export default function Navbar() {
               ))}
             </ul>
             <div className="shell pb-10 pt-2 flex flex-col gap-3">
-              <Link to="/#contact" className="rounded-lg bg-btn py-3.5 text-center text-sm font-semibold text-white">Talk to your security expert</Link>
-              <a href={CONTACT.phoneHref} className="flex items-center justify-center gap-2 rounded-lg border border-border-strong py-3.5 text-sm font-medium text-amber-ink">
+              <Link to="/#contact" className="rounded-lg bg-btn py-3.5 text-center text-sm font-semibold text-white">Talk to a Security Expert</Link>
+              {/* <a href={CONTACT.phoneHref} className="flex items-center justify-center gap-2 rounded-lg border border-border-strong py-3.5 text-sm font-medium text-amber-ink">
                 <Phone className="w-4 h-4" aria-hidden="true" /> Report an incident: {CONTACT.phone}
-              </a>
+              </a> */}
             </div>
           </motion.div>
         )}

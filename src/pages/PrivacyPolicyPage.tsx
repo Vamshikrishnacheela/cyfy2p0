@@ -1,14 +1,15 @@
 import { LegalLayout, LegalSection, Pending } from '../components/LegalLayout';
 
 // Facts in "What this website collects" are taken from the current code, not from an approved policy:
-// LeadCta.tsx (leads), Newsletter.tsx (newsletter), ChatBot.tsx (Gemini), ThemeToggle.tsx (localStorage),
-// index.html (Google Fonts), constants.ts BLOG_POSTS (picsum.photos images). Update this list if those change.
+// EnquiryForm.tsx (enquiries), LeadCta.tsx (leads), Newsletter.tsx (newsletter), ChatBot.tsx (Gemini),
+// ThemeToggle.tsx (localStorage), index.html (Google Fonts). Update this list if those change.
 const COLLECTED = [
+  { what: 'Enquiry form', detail: 'Your name, work email, company, the area you need help with, any message you add and the page you sent it from, stored in Google Firebase Cloud Firestore together with the time of submission.' },
   { what: 'Exposure snapshot form', detail: 'Work email and company domain you enter on the homepage, stored in Google Firebase Cloud Firestore together with the time of submission.' },
   { what: 'Newsletter sign-up', detail: 'The email address you enter, stored in Google Firebase Cloud Firestore together with the time of sign-up.' },
   { what: 'AI assistant chat', detail: 'Messages you type into the chat assistant are sent to Google\'s Gemini API to generate a reply.' },
   { what: 'Theme preference', detail: 'Your light or dark theme choice is stored in your own browser (localStorage) and is not sent to CYFY.' },
-  { what: 'Third-party content', detail: 'Fonts are loaded from Google Fonts, and some blog images are loaded from picsum.photos. These providers receive standard request information such as your IP address.' },
+  { what: 'Third-party content', detail: 'Fonts are loaded from Google Fonts. This provider receives standard request information such as your IP address.' },
 ];
 
 export default function PrivacyPolicyPage() {
@@ -31,7 +32,7 @@ export default function PrivacyPolicyPage() {
       </LegalSection>
 
       <LegalSection title="How long we keep it">
-        <Pending what="Retention periods for leads, newsletter subscriptions and chat messages, to be approved by CYFY." />
+        <Pending what="Retention periods for enquiries, leads, newsletter subscriptions and chat messages, to be approved by CYFY." />
       </LegalSection>
 
       <LegalSection title="Who we share it with">

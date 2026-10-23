@@ -1,11 +1,9 @@
-import { useState, useEffect, useRef, Suspense, lazy } from 'react';
+import { useState, useEffect, useRef, useCallback, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence, MotionConfig } from 'motion/react';
 import { MessageSquare } from 'lucide-react';
-import ChatBot from './components/ChatBot';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import BlogSection from './components/BlogSection';
 import Footer from './components/Footer';
 import Newsletter from './components/Newsletter';
 import { CustomCursor } from './components/CustomCursor';
@@ -20,7 +18,10 @@ import CustomerProof from './components/home/CustomerProof';
 import Industries from './components/home/Industries';
 import PartnersPlatforms from './components/home/PartnersPlatforms';
 import LeadCta from './components/home/LeadCta';
+import { usePageMeta } from './lib/usePageMeta';
 
+// Loaded on first open, so the Gemini SDK stays out of the initial bundle
+const ChatBot = lazy(() => import('./components/ChatBot'));
 const ServiceDetailPage = lazy(() => import('./pages/ServiceDetailPage'));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
@@ -28,6 +29,7 @@ const AboutPage = lazy(() => import('./pages/AboutPage'));
 const EventsPage = lazy(() => import('./pages/EventsPage'));
 
 function NotFound() {
+  usePageMeta({ title: 'Page not found | CYFY', description: 'The page you were looking for does not exist on the CYFY website.', noindex: true });
   return (
     <div className="shell min-h-[70vh] flex flex-col items-center justify-center text-center pt-28">
       <p className="font-mono text-sm text-amber-ink">404</p>
@@ -51,12 +53,14 @@ function ScrollManager() {
       return;
     }
     const id = decodeURIComponent(hash.slice(1));
+    // Glide within the current page; arriving from another page (or with reduced motion) jumps straight there
+    const behavior: ScrollBehavior = samePage && !window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'auto';
     // Lazily loaded pages render their sections a little later, so retry for up to ~3s
     let raf = 0;
     const deadline = performance.now() + 3000;
     const tryScroll = () => {
       const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (el) el.scrollIntoView({ behavior, block: 'start' });
       else if (performance.now() < deadline) raf = requestAnimationFrame(tryScroll);
     };
     raf = requestAnimationFrame(tryScroll);
@@ -66,6 +70,10 @@ function ScrollManager() {
 }
 
 function HomePage() {
+  usePageMeta({
+    title: 'CYFY - 24/7 Network and Security Operations',
+    description: 'CYFY designs, secures and runs network and security operations for enterprises: 24/7 SOC and NOC, threat intelligence and audit-ready GRC from an ISO/IEC 27001:2022 certified organization.',
+  });
   return (
     <>
       <section id="home" aria-label="Introduction">
@@ -78,10 +86,9 @@ function HomePage() {
       <SocSection />
       <Capabilities />
       <ProductEcosystem />
+      <PartnersPlatforms />
       <CustomerProof />
       <Industries />
-      <PartnersPlatforms />
-      <BlogSection />
       <LeadCta />
     </>
   );
@@ -95,6 +102,7 @@ function NewsletterOffHome() {
 
 export default function App() {
   const [showChat, setShowChat] = useState(false);
+  const closeChat = useCallback(() => setShowChat(false), []);
 
   return (
     <MotionConfig reducedMotion="user">
@@ -137,13 +145,14 @@ export default function App() {
             whileTap={{ scale: 0.9 }}
             onClick={() => setShowChat(true)}
             aria-label="Open CYFY assistant chat"
+            aria-expanded={showChat}
             className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[110] bg-btn text-white p-4 rounded-full shadow-lg flex items-center justify-center group"
           >
             <MessageSquare className="w-6 h-6 group-hover:scale-110 transition-transform" />
           </motion.button>
 
           <AnimatePresence>
-            {showChat && <ChatBot onClose={() => setShowChat(false)} />}
+            {showChat && <Suspense fallback={null}><ChatBot onClose={closeChat} /></Suspense>}
           </AnimatePresence>
         </div>
       </Router>

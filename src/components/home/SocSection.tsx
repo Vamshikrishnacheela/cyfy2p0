@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'motion/react';
 import { CheckCircle2, ChevronDown } from 'lucide-react';
 import { SOC_PILLARS, SOC_SOURCES, SOC_STAGES, SOC_OUTCOMES } from '../../homeContent';
@@ -48,7 +48,21 @@ export default function SocSection() {
   }, [stage, auto, inView, reduce]);
 
   const current = SOC_STAGES[stage];
+  const src = SOC_SOURCES[source];
   const closed = stage === SOC_STAGES.length - 1;
+
+  // Arrow keys move between the Detect / Triage / Respond tabs
+  const onStageKey = (e: KeyboardEvent<HTMLDivElement>) => {
+    const delta = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+    if (!delta) return;
+    e.preventDefault();
+    // Move from the focused tab, which can differ from the selected one
+    const from = SOC_STAGES.findIndex(s => `soc-tab-${s.id}` === (e.target as HTMLElement).id);
+    const next = ((from < 0 ? stage : from) + delta + SOC_STAGES.length) % SOC_STAGES.length;
+    setStage(next);
+    setAuto(false);
+    document.getElementById(`soc-tab-${SOC_STAGES[next].id}`)?.focus();
+  };
 
   return (
     <section id="soc" className="scene scene-circuit py-20 md:py-28 bg-surface-2">
@@ -81,6 +95,8 @@ export default function SocSection() {
                     <li key={s.label}>
                       <button
                         type="button"
+                        aria-pressed={i === source}
+                        aria-controls="soc-panel"
                         onClick={() => { setSource(i); setStage(0); setAuto(false); }}
                         className={`flex w-full items-center gap-2.5 rounded-lg border px-3 py-2 text-left text-xs sm:text-sm transition-colors ${i === source ? 'border-secondary/50 bg-secondary/10 text-band-text' : 'border-band-border bg-band-surface text-band-muted hover:text-band-text'}`}
                       >
@@ -97,18 +113,30 @@ export default function SocSection() {
 
               {/* CYFY SOC */}
               <div className="flex flex-col justify-center">
-                <div className="rounded-xl border border-band-border bg-band-surface p-4 sm:p-5 shadow-lg shadow-black/20">
+                <div id="soc-panel" className="rounded-xl border border-band-border bg-band-surface p-4 sm:p-5 shadow-lg shadow-black/20">
                   <div className="flex items-center justify-between">
                     <p className="font-semibold">CYFY SOC</p>
                     <p className="font-mono text-[11px] text-band-muted">SIEM + SOAR</p>
                   </div>
-                  <div className="mt-4 grid grid-cols-3 gap-1 rounded-lg border border-band-border bg-black/20 p-1" role="tablist" aria-label="SOC stage">
+                  {/* Heading and summary for the selected environment */}
+                  <div className="mt-3 min-h-[6.5rem] sm:min-h-[5.5rem]">
+                    <AnimatePresence mode="wait">
+                      <motion.div key={source} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+                        <h3 className="text-base font-semibold text-[#7fe3f2]">{src.heading}</h3>
+                        <p className="mt-1 text-sm leading-relaxed text-band-muted">{src.summary}</p>
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
+                  <div className="mt-3 grid grid-cols-3 gap-1 rounded-lg border border-band-border bg-black/20 p-1" role="tablist" aria-label={`SOC stage for ${src.label}`} onKeyDown={onStageKey}>
                     {SOC_STAGES.map((s, i) => (
                       <button
                         key={s.id}
+                        id={`soc-tab-${s.id}`}
                         type="button"
                         role="tab"
                         aria-selected={i === stage}
+                        aria-controls="soc-stage-panel"
+                        tabIndex={i === stage ? 0 : -1}
                         onClick={() => { setStage(i); setAuto(false); }}
                         className={`rounded-md py-2 text-sm font-medium transition-colors ${i === stage ? 'bg-secondary text-[#1a1206]' : 'text-band-muted hover:text-band-text'}`}
                       >
@@ -116,13 +144,11 @@ export default function SocSection() {
                       </button>
                     ))}
                   </div>
-                  <div className="mt-4 min-h-[5.5rem]" aria-live="polite">
+                  <div id="soc-stage-panel" role="tabpanel" aria-labelledby={`soc-tab-${current.id}`} className="mt-4 min-h-[6rem] sm:min-h-[5rem]" aria-live={auto ? 'off' : 'polite'}>
                     <AnimatePresence mode="wait">
                       <motion.div key={current.id + source} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-                        <p className="font-mono text-xs text-[#7fe3f2]">
-                          {current.status} · {SOC_SOURCES[source].label}
-                        </p>
-                        <p className="mt-2 text-sm leading-relaxed text-band-muted">{current.body}</p>
+                        <p className="font-mono text-xs text-band-muted">{current.label} · {src.label}</p>
+                        <p className="mt-1.5 text-sm leading-relaxed text-band-text">{src.stages[current.id]}</p>
                       </motion.div>
                     </AnimatePresence>
                   </div>

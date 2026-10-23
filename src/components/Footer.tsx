@@ -11,7 +11,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-border-base bg-surface-2">
       <div className="shell pt-16 pb-10">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_repeat(5,1fr)] lg:gap-8">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_repeat(4,1fr)] lg:gap-8">
           <div className="sm:col-span-2 lg:col-span-1">
             <Link to="/" aria-label="CYFY home" className="inline-block">
               <CyfyLogo iconSize={38} />
