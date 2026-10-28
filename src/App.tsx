@@ -27,6 +27,7 @@ const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const EventsPage = lazy(() => import('./pages/EventsPage'));
+const MeetOurTeamPage = lazy(() => import('./pages/MeetOurTeamPage'));
 
 function NotFound() {
   usePageMeta({ title: 'Page not found | CYFY', description: 'The page you were looking for does not exist on the CYFY website.', noindex: true });
@@ -128,6 +129,7 @@ export default function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/events" element={<EventsPage />} />
+                <Route path="/meet-our-team" element={<MeetOurTeamPage />} />
                 <Route path="/service/:slug" element={<ServiceDetailPage />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
                 <Route path="/terms" element={<TermsPage />} />

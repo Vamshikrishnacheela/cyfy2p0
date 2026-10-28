@@ -11,7 +11,7 @@ import {SERVICES} from './src/constants';
  */
 function seoFiles(siteUrl: string): Plugin {
   const base = siteUrl.replace(/\/+$/, '');
-  const routes = ['/', '/about', '/events', ...SERVICES.map(s => `/service/${s.slug}`)];
+  const routes = ['/', '/about', '/meet-our-team', '/events', ...SERVICES.map(s => `/service/${s.slug}`)];
   return {
     name: 'cyfy-seo-files',
     apply: 'build',

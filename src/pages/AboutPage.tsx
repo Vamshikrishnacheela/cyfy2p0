@@ -48,7 +48,7 @@ export default function AboutPage() {
   });
 
   return (
-    <>
+    <>  
       {/* Company introduction */}
       <section aria-labelledby="about-title" className="scene scene-glow pt-28 md:pt-36 pb-20 md:pb-24">
         <div className="shell grid lg:grid-cols-[1.1fr_1fr] gap-10 lg:gap-16 items-start">

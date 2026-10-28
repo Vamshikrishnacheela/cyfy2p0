@@ -46,6 +46,7 @@ const NAV: NavGroup[] = [
   { label: 'Industries', items: INDUSTRIES.map(i => ({ label: i.name, desc: i.who, to: `/#industry-${i.id}` })) },
   { label: 'Company', items: [
     { label: 'About CYFY', desc: 'Our profile, services and leadership', to: '/about' },
+    { label: 'Meet Our Team', desc: 'The people behind CYFY', to: '/meet-our-team' },
     { label: 'Partners', desc: '30+ OEM platform partnerships', to: '/#partners' },
     { label: 'Events', desc: 'CYFY at Cyber Dome 2025', to: '/events' },
     { label: 'Contact', desc: 'Email, phone and office address', to: '/about#contact' },
