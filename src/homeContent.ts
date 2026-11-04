@@ -19,6 +19,7 @@ export const HERO_METRICS: Metric[] = [
 // website, cropped to their artwork and resized; never recoloured. `plate` is the tile colour behind the logo: white for
 // logos designed for light backgrounds, dark for IHCL's white header logo. `ratio` is width / height of the file.
 // Blackbit (12th in the list) is omitted until CYFY supplies its official logo; the company could not be identified.
+// BigBasket is omitted until CYFY supplies its current official logo; no verified source for the post-2021 logo was available.
 const clientLogo = (file: string) => new URL(`./assets/clients/${file}`, import.meta.url).href;
 export const CLIENT_LOGOS: LogoItem[] = [
   { name: 'Sahi', logo: clientLogo('sahi.svg'), plate: '#ffffff', ratio: 2.28 },
@@ -33,6 +34,7 @@ export const CLIENT_LOGOS: LogoItem[] = [
   { name: 'IHCL', logo: clientLogo('ihcl.png'), plate: '#111418', ratio: 2.92 },
   { name: 'HPCL', logo: clientLogo('hpcl.png'), plate: '#ffffff', ratio: 5.30 },
   { name: 'Aurobindo Pharmaceuticals', logo: clientLogo('aurobindo-pharma.png'), plate: '#ffffff', ratio: 2.06 },
+  { name: 'upGrad', logo: clientLogo('upgrad.png'), plate: '#ffffff', ratio: 3.90 },
 ];
 
 export const WHY_STATS = [
@@ -218,17 +220,17 @@ export const PRODUCTS = {
     body: 'One live view of CERT-In advisories, CVE updates and threat context from more than 50 sources.',
     bullets: ['CERT-In and NVD in one feed', 'Threat actor, IOC and MITRE context', 'Briefings and exports for leadership'],
   },
-  day2SecOps: {
-    name: 'Day 2 – SecOps', icon: ShieldCheck, title: 'Day 2 – SecOps',
-    body: 'Day 2 – SecOps brings security and operations together to close the gap between identifying risks and actually resolving them. It provides unified visibility across security tools, infrastructure, endpoints, networks, and operational environments, enabling teams to detect threats, prioritize risks, coordinate response, and drive effective remediation. By connecting SOC, NOC, GRC, and vCISO functions, Day 2 helps organizations turn security intelligence into actionable operational outcomes.',
+  cisoDashboard: {
+    name: 'CISO Dashboard', icon: ClipboardCheck, title: 'CISO Dashboard',
+    body: 'A leadership view of your security programme, built for CISO-level visibility, governance and decision-making. Everything the SOC does is reported back alongside weekly threat advisories and audit-ready records, so you can see where you stand and decide what comes next.',
+    bullets: ['Weekly threat advisory', 'Audit-ready records for SEBI CSCRF, ISO 27001 and more', 'Evidence your auditors can use'],
   },
 };
 
 export const ECOSYSTEM = [
   { id: 'cyshield', stage: 'Exposure', name: 'cyshield', kind: 'CYFY product', icon: Radar, body: 'Finds your internet-facing exposure: domains, ports, services, TLS, email and DNS hygiene.' },
   { id: 'cynapptics', stage: 'Intelligence', name: 'cynapptics', kind: 'CYFY product', icon: Newspaper, body: 'Tells you which CERT-In advisories and CVEs are actively exploited, with IOC and MITRE context.' },
-  { id: 'day2SecOps', stage: 'Detect and respond', name: 'Day 2 – SecOps', kind: 'CYFY product', icon: ShieldCheck, body: 'Day 2 – SecOps brings security and operations together to close the gap between identifying risks and actually resolving them.' },
-  { id: 'prove', stage: 'Report and prove', name: 'CISO dashboard', kind: 'Managed service', icon: ClipboardCheck, body: 'Weekly threat advisories, a CISO dashboard and audit-ready records for SEBI CSCRF, ISO 27001 and more.' },
+  { id: 'cisoDashboard', stage: 'Report and prove', name: 'CISO Dashboard', kind: 'Managed service', icon: ClipboardCheck, body: 'CISO-level visibility, governance and decision-making, backed by weekly threat advisories and audit-ready records.' },
 ] as const;
 
 export interface Advisory {
@@ -311,6 +313,7 @@ export type PartnerLogo = LogoItem;
 // Partner logos as published on https://www.cyfy.ai/our-partners (organisations identified from the artwork).
 // Files are the originals with empty margins trimmed; `plate` matches each logo's own background
 // (SentinelOne's white wordmark sits on a dark plate), so no logo is recoloured or filtered. `ratio` is width / height of the file.
+// Netskope and Palo Alto Networks are the unmodified SVGs from each company's own website.
 export const PARTNERS: PartnerLogo[] = [
   { name: 'SentinelOne', logo: new URL('./assets/partners/sentinelone.png', import.meta.url).href, plate: '#111418', ratio: 5.71 },
   { name: 'Fortinet', logo: new URL('./assets/partners/fortinet.png', import.meta.url).href, plate: '#ffffff', ratio: 7.50 },
@@ -326,6 +329,8 @@ export const PARTNERS: PartnerLogo[] = [
   { name: 'Innspark', logo: new URL('./assets/partners/innspark.png', import.meta.url).href, plate: '#1d3d59', ratio: 2.74 },
   { name: 'OPSWAT', logo: new URL('./assets/partners/opswat.png', import.meta.url).href, plate: '#050f22', ratio: 5.55 },
   { name: 'ZeroPort', logo: new URL('./assets/partners/zeroport.png', import.meta.url).href, plate: '#0d0d0d', ratio: 2.30 },
+  { name: 'Netskope', logo: new URL('./assets/partners/netskope.svg', import.meta.url).href, plate: '#ffffff', ratio: 6.50 },
+  { name: 'Palo Alto Networks', logo: new URL('./assets/partners/palo-alto-networks.svg', import.meta.url).href, plate: '#ffffff', ratio: 5.35 },
 ];
 
 export const FOOTER_COLUMNS = [

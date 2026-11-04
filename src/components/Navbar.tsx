@@ -4,7 +4,6 @@ import { Menu, X, ChevronDown, Phone, ArrowRight } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { CyfyLogo } from './CyfyLogo';
 import ThemeToggle from './ThemeToggle';
-import { INDUSTRIES } from '../homeContent';
 import { CONTACT_INFO as CONTACT, SERVICES, SERVICE_GROUPS } from '../constants';
 import { ProductName, type ProductId } from './ProductName';
 
@@ -32,7 +31,7 @@ const NAV: NavGroup[] = [
   { label: 'Platform', items: [
     { label: 'CyShield Pro', product: 'cyshield', desc: 'See what an attacker sees', to: '/#platform' },
     { label: 'Cynapptics', product: 'cynapptics', desc: 'Threat intelligence your team can act on', to: '/#platform-cynapptics' },
-    { label: 'Day 2 – SecOps', desc: 'Automated response and remediation', to: '/#platform-day2SecOps' },
+    { label: 'CISO Dashboard', desc: 'Security visibility and governance for leadership', to: '/#platform-cisoDashboard' },
     // Hidden until the platform section has CISORA content: its target (#platform-compaas) does not exist
     // { label: 'CISORA', desc: 'AI-enabled GRC platform', to: '/#platform-compaas' },
 
@@ -43,7 +42,7 @@ const NAV: NavGroup[] = [
     { label: 'Test', desc: 'We test it like an attacker would', to: '/#cap-test' },
     { label: 'Comply', desc: 'We keep you audit-ready', to: '/#cap-comply' },
   ] },
-  { label: 'Industries', items: INDUSTRIES.map(i => ({ label: i.name, desc: i.who, to: `/#industry-${i.id}` })) },
+  { label: 'CYFY Threat Labs', to: '/threat-labs' },
   { label: 'Company', items: [
     { label: 'About CYFY', desc: 'Our profile, services and leadership', to: '/about' },
     { label: 'Meet Our Team', desc: 'The people behind CYFY', to: '/meet-our-team' },
@@ -115,7 +114,7 @@ export default function Navbar() {
     >
       <nav className="shell max-w-[86rem] min-[1440px]:max-w-[92rem] flex h-16 md:h-[72px] items-center justify-between gap-4 xl:gap-6 whitespace-nowrap" aria-label="Main">
         <Link to="/" className="shrink-0" aria-label="CYFY home">
-          <CyfyLogo imgClassName="h-11 md:h-12 xl:h-[46px] 2xl:h-[52px]" />
+          <CyfyLogo imgClassName="h-9 md:h-10 xl:h-9 2xl:h-10" />
         </Link>
 
         <ul className="hidden xl:flex items-center xl:max-[1439px]:gap-2 min-[1440px]:max-[1535px]:gap-3 2xl:gap-4">

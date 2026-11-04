@@ -14,6 +14,9 @@ const TEAM: TeamMember[] = [
   { name: 'Anil B', title: 'Lead Architect – Network & Security', image: photo('anil-b.jpg'), linkedin: 'https://www.linkedin.com/in/anil-kumar-bellana-5b8b96192/', position: '53% 50%' },
   { name: 'Srikar Marupaka', title: 'Senior Cyber Security Engineer', image: photo('srikar-marupaka.jpg'), linkedin: 'https://www.linkedin.com/in/srikar-marupaka-727157157/', position: '45% 50%' },
   { name: 'G Vineeth Vishesh', title: 'Senior Cyber Security Engineer', image: photo('g-vineeth-vishesh.jpg'), linkedin: 'https://www.linkedin.com/in/vineet-vishesh-66ab95281/', position: '48% 50%' },
+  { name: 'Bhavitavya', title: 'Product Developer', image: photo('bhavitavya.jpg'), linkedin: 'https://www.linkedin.com/in/bhavitavya-isukapati/', position: '50% 50%' },
+  { name: 'Ankit Aole', title: 'Senior Security Engineer', image: photo('ankit-aole.jpg'), linkedin: 'https://www.linkedin.com/in/ankit-aole-fncyber/', position: '50% 20%' },
+  { name: 'Lokeshwar Goud', title: 'Senior AI Engineer', image: photo('lokeshwar-goud.jpg'), linkedin: 'https://www.linkedin.com/in/lokeshwargoud/', position: '50% 50%' },
 ];
 
 export default function MeetOurTeamPage() {
@@ -35,7 +38,8 @@ export default function MeetOurTeamPage() {
 
           <ul className="grid min-[480px]:grid-cols-2 lg:grid-cols-3 gap-4">
             {TEAM.map((m, i) => (
-              <li key={m.name}>
+              // With two columns the odd last card is centred at its usual width, so the row has no one-sided gap
+              <li key={m.name} className="min-[480px]:max-lg:last:col-span-2 min-[480px]:max-lg:last:justify-self-center min-[480px]:max-lg:last:w-[calc(50%-0.5rem)]">
                 <Reveal delay={Math.min(i, 5) * 0.05} className="h-full">
                   <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-border-base bg-surface transition-colors hover:border-brand-ink/50">
                     <div className="relative aspect-[4/5] bg-surface-2">

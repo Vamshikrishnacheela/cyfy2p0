@@ -73,43 +73,48 @@ function cynappticsView() {
   );
 }
 
-const DAY2_FUNCTIONS = ['SOC', 'NOC', 'GRC', 'vCISO'];
-const DAY2_FLOW = ['Detect threats', 'Prioritize risks', 'Coordinate response', 'Drive effective remediation'];
-function Day2View() {
-  return (
-    <Window title="Day 2 – SecOps / Unified operations">
-      <ul className="grid grid-cols-2 sm:grid-cols-4 border-b border-border-base">
-        {DAY2_FUNCTIONS.map((f, i) => (
-          <li key={f} className={`border-border-base px-4 py-3 text-center text-sm font-semibold text-brand-ink ${i % 2 ? 'border-l border-border-base' : ''} ${i > 1 ? 'border-t sm:border-t-0' : ''} ${i === 2 ? 'sm:border-l' : ''}`}>{f}</li>
-        ))}
-      </ul>
-      <ol className="p-4 space-y-3">
-        {DAY2_FLOW.map((s, i) => (
-          <li key={s} className="flex items-center gap-3">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-ink/15 text-brand-ink text-xs font-mono">{i + 1}</span>
-            <span className="text-sm font-medium">{s}</span>
-          </li>
-        ))}
-      </ol>
-    </Window>
-  );
-}
-
 const CSCRF = ['Governance', 'Identify', 'Protect', 'Detect', 'Respond', 'Recover'];
-function ProveView() {
+// Illustrative values only, like the rest of the sample panels; the counts repeat the cyshield and cynapptics samples above
+const SAMPLE_READINESS = [92, 88, 81, 95, 86, 74];
+const CISO_STATS = [
+  { label: 'Open findings', value: PRODUCTS.cyshield.stats[1].value },
+  { label: 'Exploited CVEs', value: ADVISORIES.length },
+  { label: 'Pillars tracked', value: CSCRF.length },
+];
+function CisoDashboardView() {
   return (
-    <Window title="CISO dashboard / SEBI CSCRF">
-      <ul className="p-4 space-y-3">
-        {CSCRF.map((c, i) => (
-          <li key={c} className="grid grid-cols-[6rem_1fr] items-center gap-3 text-sm">
-            <span className="text-text-muted">{c}</span>
-            <span className="h-2 rounded-full bg-surface-2 overflow-hidden">
-              <motion.span className="block h-full rounded-full bg-gradient-to-r from-brand-ink to-amber-ink" initial={{ width: 0 }} animate={{ width: '100%' }} transition={{ duration: 0.7, delay: i * 0.08 }} />
-            </span>
+    <Window title="CISO Dashboard / Security posture">
+      <dl className="grid grid-cols-3 border-b border-border-base">
+        {CISO_STATS.map((s, i) => (
+          <div key={s.label} className={`px-4 py-3 ${i ? 'border-l border-border-base' : ''}`}>
+            <dt className="text-[11px] text-text-subtle">{s.label}</dt>
+            <dd className="text-xl font-semibold tabular-nums">{s.value}</dd>
+          </div>
+        ))}
+      </dl>
+      <div className="p-4">
+        <p className="mb-3 text-[11px] text-text-subtle">SEBI CSCRF readiness</p>
+        <ul className="space-y-2.5">
+          {CSCRF.map((c, i) => (
+            <li key={c} className="grid grid-cols-[5.5rem_1fr_2.5rem] items-center gap-3 text-sm">
+              <span className="text-text-muted">{c}</span>
+              <span className="h-1.5 rounded-full bg-surface-2 overflow-hidden" aria-hidden="true">
+                <motion.span className="block h-full rounded-full bg-brand-ink" initial={{ width: 0 }} animate={{ width: `${SAMPLE_READINESS[i]}%` }} transition={{ duration: 0.7, delay: i * 0.08 }} />
+              </span>
+              <span className="text-right text-xs tabular-nums">{SAMPLE_READINESS[i]}%</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <ul className="border-t border-border-base">
+        {PRODUCTS.cyshield.rows.slice(0, 2).map((r, i) => (
+          <li key={r.asset} className={`flex items-center justify-between gap-3 px-4 py-2.5 text-sm ${i ? 'border-t border-border-base' : ''}`}>
+            <span className="text-text-muted">{r.finding}</span>
+            <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[11px] ${SEVERITY_STYLES[r.severity]}`}>{r.severity}</span>
           </li>
         ))}
       </ul>
-      <p className="border-t border-border-base px-4 py-3 text-xs text-text-muted">SEBI CSCRF-ready reporting, every week.</p>
+      <p className="border-t border-border-base px-4 py-3 text-xs text-text-muted">Illustrative data only, not a customer's security or compliance status.</p>
     </Window>
   );
 }
@@ -117,8 +122,7 @@ function ProveView() {
 const DETAIL: Record<NodeId, { title: string; body: string; bullets: string[]; link?: { to: string; label: string }; external?: { href: string; label: string }; View: () => JSX.Element }> = {
   cyshield: { title: PRODUCTS.cyshield.title, body: PRODUCTS.cyshield.body, bullets: PRODUCTS.cyshield.bullets, View: OsinterView },
   cynapptics: { title: PRODUCTS.cynapptics.title, body: PRODUCTS.cynapptics.body, bullets: PRODUCTS.cynapptics.bullets, external: { href: 'https://cynapptics.cyfy.ai/', label: 'Visit Cynapptics' }, View: cynappticsView },
-  day2SecOps: { title: PRODUCTS.day2SecOps.title, body: PRODUCTS.day2SecOps.body, bullets: [], View: Day2View },
-  prove: { title: 'Evidence your auditors can use.', body: 'Everything the SOC does is reported back as weekly advisories, a CISO dashboard and audit-ready records.', bullets: ['Weekly threat advisory', 'CISO dashboard', 'Audit-ready records for SEBI CSCRF, ISO 27001 and more'], link: { to: '/#customers', label: 'See customer results' }, View: ProveView },
+  cisoDashboard: { title: PRODUCTS.cisoDashboard.title, body: PRODUCTS.cisoDashboard.body, bullets: PRODUCTS.cisoDashboard.bullets, link: { to: '/#customers', label: 'See customer results' }, View: CisoDashboardView },
 };
 
 export default function ProductEcosystem() {
@@ -135,18 +139,18 @@ export default function ProductEcosystem() {
           body="cyshield and cynapptics feed our SOC with what attackers can see and what they are exploiting right now. Select a stage to see how the pieces work together."
         />
 
-        <ol className="grid grid-cols-2 lg:grid-cols-4 gap-3" role="tablist" aria-label="CYFY security ecosystem">
+        <ol className="grid grid-cols-2 lg:grid-cols-3 gap-3" role="tablist" aria-label="CYFY security ecosystem">
           {ECOSYSTEM.map((n, i) => {
             const isActive = n.id === active;
             return (
-              <li key={n.id} className="relative">
+              <li key={n.id} className="relative last:col-span-2 lg:last:col-span-1">
                 <button
                   id={`platform-${n.id}`}
                   type="button"
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setActive(n.id)}
-                  className={`scroll-mt-24 h-full w-full rounded-xl border p-4 text-left transition-all duration-300 ${isActive ? 'border-brand-ink bg-surface shadow-lg shadow-black/10' : 'border-border-base bg-surface/60 hover:border-border-strong hover:bg-surface'}`}
+                  className={`scroll-mt-24 flex flex-col h-full w-full rounded-xl border p-4 text-left transition-all duration-300 ${isActive ? 'border-brand-ink bg-surface shadow-lg shadow-black/10' : 'border-border-base bg-surface/60 hover:border-border-strong hover:bg-surface'}`}
                 >
                   <span className="flex items-center justify-between">
                     <span className="font-mono text-[11px] uppercase tracking-wider text-amber-ink">0{i + 1} · {n.stage}</span>

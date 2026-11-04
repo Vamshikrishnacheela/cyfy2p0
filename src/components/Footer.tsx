@@ -14,7 +14,7 @@ export default function Footer() {
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_repeat(4,1fr)] lg:gap-8">
           <div className="sm:col-span-2 lg:col-span-1">
             <Link to="/" aria-label="CYFY home" className="inline-block">
-              <CyfyLogo iconSize={38} />
+              <CyfyLogo iconSize={32} />
             </Link>
             <address className="mt-6 not-italic space-y-3 text-sm text-text-muted">
               <p className="flex gap-2.5"><MapPin className="w-4 h-4 mt-0.5 shrink-0 text-brand-ink" aria-hidden="true" /><span>{CONTACT.address}</span></p>

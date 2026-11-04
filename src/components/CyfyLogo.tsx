@@ -1,6 +1,6 @@
 import React from 'react';
 
-const officialCyfyLogo = new URL('../assets/images/cyfy2.0_logo des.png', import.meta.url).href;
+const officialCyfyLogo = new URL('../assets/images/cyfy-logo-tm.png', import.meta.url).href;
 
 interface CyfyLogoProps {
   className?: string;
@@ -20,7 +20,7 @@ export const CyfyLogo: React.FC<CyfyLogoProps> = ({
     <div className={`flex items-center gap-3.5 select-none ${className}`}>
       <img
         src={officialCyfyLogo}
-        alt="CYFY, An ISO/IEC 27001:2022 Certified Company"
+        alt="CYFY"
         style={imgClassName ? undefined : { height: iconSize, width: 'auto' }}
         className={`block shrink-0 object-contain ${imgClassName ? `${imgClassName} w-auto` : ''}`}
       />

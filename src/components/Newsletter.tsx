@@ -98,7 +98,7 @@ export default function Newsletter() {
                 <button
                   type="submit"
                   disabled={status === 'submitting'}
-                  className="bg-primary text-white px-8 py-4 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-primary/80 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
+                  className="bg-btn text-white px-8 py-4 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-btn-hover transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
                 >
                   {status === 'submitting' ? (
                     <>
