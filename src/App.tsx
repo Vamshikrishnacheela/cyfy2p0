@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback, Suspense, lazy } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence, MotionConfig } from 'motion/react';
 import { MessageSquare } from 'lucide-react';
+import BackgroundVideo from './components/BackgroundVideo';
 import Navbar from './components/Navbar';
 import { LEGACY_HASH_IDS } from './homeContent';
 import Hero from './components/Hero';
@@ -30,6 +31,7 @@ const AboutPage = lazy(() => import('./pages/AboutPage'));
 const EventsPage = lazy(() => import('./pages/EventsPage'));
 const MeetOurTeamPage = lazy(() => import('./pages/MeetOurTeamPage'));
 const ThreatLabsPage = lazy(() => import('./pages/ThreatLabsPage'));
+const ThreatDetailPage = lazy(() => import('./pages/ThreatDetailPage'));
 
 function NotFound() {
   usePageMeta({ title: 'Page not found | CYFY', description: 'The page you were looking for does not exist on the CYFY website.', noindex: true });
@@ -112,7 +114,8 @@ export default function App() {
     <MotionConfig reducedMotion="user">
       <Router>
         <ScrollManager />
-        <div className="min-h-screen bg-bg-base text-text-base selection:bg-primary/30">
+        <BackgroundVideo />
+        <div className="min-h-screen text-text-base selection:bg-primary/30">
           {/* Custom CYFY Interactive Cursor */}
           <CustomCursor />
 
@@ -134,6 +137,7 @@ export default function App() {
                 <Route path="/events" element={<EventsPage />} />
                 <Route path="/meet-our-team" element={<MeetOurTeamPage />} />
                 <Route path="/threat-labs" element={<ThreatLabsPage />} />
+                <Route path="/under-attack/:slug" element={<ThreatDetailPage />} />
                 <Route path="/service/:slug" element={<ServiceDetailPage />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
                 <Route path="/terms" element={<TermsPage />} />

@@ -120,6 +120,51 @@
   }
 }
 
+/* ---------- Site-wide background video (BackgroundVideo.tsx) ----------
+   A negative z-index sits above the page background but below all content, without creating a stacking
+   context around the content, so the navbar, modal and custom cursor keep their existing layering. */
+.site-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100lvh; /* No gap when a mobile address bar collapses */
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.site-bg-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  /* The supplied clip is a screen recording: this crops its black bars, burned-in labels and "Replay animation"
+     button (outside the middle 69% of its height). Set to none once a clean export replaces the file. */
+  transform: scale(1.45);
+}
+.site-bg-overlay {
+  position: absolute;
+  inset: 0;
+  /* --bg-base. 0.72 is the lowest value tested that keeps muted body text at 4.5:1 over the clip's brightest frame */
+  background: rgb(8 18 23 / 0.72);
+}
+
+/* In dark mode, full-width sections let the video show through. Cards keep their solid surfaces.
+   Sections that were tinted keep a faint tint, so the page still has its alternating rhythm. */
+:root:not(.light) body,
+:root:not(.light) :is(section, footer):not([class*="rounded"]),
+:root:not(.light) .hero-bg {
+  background: transparent; /* <html> keeps the dark colour from index.html, so body must not paint over the video */
+}
+:root:not(.light) section.bg-surface-2:not([class*="rounded"]) {
+  background: rgb(11 22 27 / 0.3);
+}
+:root:not(.light) footer:not([class*="rounded"]) {
+  background: rgb(11 22 27 / 0.65);
+}
+
 .band {
   background: var(--band-bg);
   color: var(--band-text);

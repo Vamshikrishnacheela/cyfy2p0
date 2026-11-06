@@ -1,11 +1,16 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, ChevronDown, Phone, ArrowRight } from 'lucide-react';
+import { Menu, X, ChevronDown, Phone, ArrowRight, ShieldAlert } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { CyfyLogo } from './CyfyLogo';
 import ThemeToggle from './ThemeToggle';
 import { CONTACT_INFO as CONTACT, SERVICES, SERVICE_GROUPS } from '../constants';
 import { ProductName, type ProductId } from './ProductName';
+import UnderAttackMenu from './UnderAttackMenu';
+import { SECURITY_EXPERT, THREATS, threatHref } from '../underAttackContent';
+
+/** openMenu / mobileGroup key for the Under Attack? Services menu */
+const UNDER_ATTACK = 'under-attack';
 
 interface NavItem { label: string; desc?: string; to: string; product?: ProductId; section?: string }
 interface NavGroup { label: string; to?: string; items?: NavItem[]; wide?: boolean }
@@ -89,6 +94,8 @@ export default function Navbar() {
   const hoverOpenedAt = useRef(0);
   const open = (label: string) => {
     if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    // Under Attack opens by click, and the pointer may cross the nav items on its way into the panel
+    if (openMenu === UNDER_ATTACK) return;
     if (openMenu !== label) hoverOpenedAt.current = Date.now();
     setOpenMenu(label);
   };
@@ -99,8 +106,14 @@ export default function Navbar() {
   };
   const scheduleClose = () => {
     if (closeTimer.current) window.clearTimeout(closeTimer.current);
-    closeTimer.current = window.setTimeout(() => setOpenMenu(null), 140);
+    closeTimer.current = window.setTimeout(() => setOpenMenu(m => (m === UNDER_ATTACK ? m : null)), 140);
   };
+  const toggleUnderAttack = () => {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    setMobileOpen(false);
+    setOpenMenu(m => (m === UNDER_ATTACK ? null : UNDER_ATTACK));
+  };
+  const closeUnderAttack = useCallback(() => setOpenMenu(m => (m === UNDER_ATTACK ? null : m)), []);
 
   // No backdrop-filter while the mobile menu is open: it would become the containing block of the fixed menu panel.
   const headerBg = mobileOpen
@@ -112,7 +125,7 @@ export default function Navbar() {
       ref={navRef}
       className={`fixed top-0 inset-x-0 z-[120] transition-[background-color,border-color] duration-300 border-b ${headerBg}`}
     >
-      <nav className="shell max-w-[86rem] min-[1440px]:max-w-[92rem] flex h-16 md:h-[72px] items-center justify-between gap-4 xl:gap-6 whitespace-nowrap" aria-label="Main">
+      <nav className="relative shell max-w-[86rem] min-[1440px]:max-w-[92rem] flex h-16 md:h-[72px] items-center justify-between gap-4 xl:gap-6 whitespace-nowrap" aria-label="Main">
         <Link to="/" className="shrink-0" aria-label="CYFY home">
           <CyfyLogo imgClassName="h-9 md:h-10 xl:h-9 2xl:h-10" />
         </Link>
@@ -183,16 +196,14 @@ export default function Navbar() {
             <Phone className="w-4 h-4" aria-hidden="true" />
             <span className="xl:max-[1439px]:sr-only">Report an incident</span>
           </a> */}
-          <Link to="/#contact" className="hidden sm:inline-flex items-center rounded-lg bg-btn px-4 py-2.5 text-sm font-semibold text-white hover:bg-btn-hover transition-colors">
-            Talk to a Security Expert
-          </Link>
+          <UnderAttackMenu open={openMenu === UNDER_ATTACK} onToggle={toggleUnderAttack} onClose={closeUnderAttack} />
           <ThemeToggle />
           <button
             type="button"
             className="xl:hidden inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border-base text-text-base"
             aria-expanded={mobileOpen}
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-            onClick={() => setMobileOpen(o => !o)}
+            onClick={() => { closeUnderAttack(); setMobileOpen(o => !o); }}
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -208,6 +219,39 @@ export default function Navbar() {
             transition={{ duration: 0.18 }}
             className="xl:hidden fixed inset-x-0 top-16 md:top-[72px] bottom-0 bg-bg-base overflow-y-auto border-t border-border-base"
           >
+            {/* From 640px the header's Under Attack button is visible, even with this drawer open */}
+            <div className="shell pt-4 sm:hidden">
+              <button
+                type="button"
+                aria-expanded={mobileGroup === UNDER_ATTACK}
+                onClick={() => setMobileGroup(mobileGroup === UNDER_ATTACK ? null : UNDER_ATTACK)}
+                className="flex w-full items-center gap-2 rounded-lg bg-btn px-4 py-3.5 text-sm font-semibold uppercase text-white"
+              >
+                <ShieldAlert className="w-4 h-4" aria-hidden="true" />
+                Under Attack? Services
+                <ChevronDown className={`ml-auto w-4 h-4 transition-transform ${mobileGroup === UNDER_ATTACK ? 'rotate-180' : ''}`} aria-hidden="true" />
+              </button>
+              {mobileGroup === UNDER_ATTACK && (
+                <ul className="mt-2 space-y-2">
+                  {[
+                    ...THREATS.map(t => ({ key: t.slug, to: threatHref(t.slug), icon: t.icon, label: t.label, summary: t.summary, tone: 'bg-crit/10 text-crit' })),
+                    { key: 'expert', to: SECURITY_EXPERT.to, icon: SECURITY_EXPERT.icon, label: SECURITY_EXPERT.label, summary: 'Speak to our security team about your situation.', tone: 'bg-brand-ink/15 text-brand-ink' },
+                  ].map(item => (
+                    <li key={item.key}>
+                      <Link to={item.to} className="flex items-start gap-3 rounded-lg border border-border-base p-3 hover:bg-surface-2">
+                        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${item.tone}`}>
+                          <item.icon className="w-4 h-4" aria-hidden="true" />
+                        </span>
+                        <span className="whitespace-normal">
+                          <span className="block text-sm font-medium text-text-base">{item.label}</span>
+                          <span className="block text-xs text-text-muted">{item.summary}</span>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
             <ul className="shell py-4">
               {NAV.map(group => (
                 <li key={group.label} className="border-b border-border-base">
@@ -249,7 +293,6 @@ export default function Navbar() {
               ))}
             </ul>
             <div className="shell pb-10 pt-2 flex flex-col gap-3">
-              <Link to="/#contact" className="rounded-lg bg-btn py-3.5 text-center text-sm font-semibold text-white">Talk to a Security Expert</Link>
               {/* <a href={CONTACT.phoneHref} className="flex items-center justify-center gap-2 rounded-lg border border-border-strong py-3.5 text-sm font-medium text-amber-ink">
                 <Phone className="w-4 h-4" aria-hidden="true" /> Report an incident: {CONTACT.phone}
               </a> */}

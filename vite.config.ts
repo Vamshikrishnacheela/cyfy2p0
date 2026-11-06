@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig, loadEnv, type Plugin} from 'vite';
 import {SERVICES} from './src/constants';
+import {THREATS, threatHref} from './src/underAttackContent';
 
 /**
  * Emits robots.txt and sitemap.xml at build time. The site URL comes from SITE_URL, else Netlify's URL
@@ -11,7 +12,7 @@ import {SERVICES} from './src/constants';
  */
 function seoFiles(siteUrl: string): Plugin {
   const base = siteUrl.replace(/\/+$/, '');
-  const routes = ['/', '/about', '/meet-our-team', '/events', '/threat-labs', ...SERVICES.map(s => `/service/${s.slug}`)];
+  const routes = ['/', '/about', '/meet-our-team', '/events', '/threat-labs', ...SERVICES.map(s => `/service/${s.slug}`), ...THREATS.map(t => threatHref(t.slug))];
   return {
     name: 'cyfy-seo-files',
     apply: 'build',

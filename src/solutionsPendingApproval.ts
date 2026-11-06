@@ -88,3 +88,18 @@ export const PENDING_SOLUTIONS: Record<'network-infrastructure' | 'cybersecurity
 
 // Not in PENDING_SOLUTIONS because the published WAF card covers only what CYFY's content confirms.
 // API security, bot management and vulnerability scanning can be added to that card once approved.
+
+// Items from the Under Attack? Services brief that existing CYFY content does not confirm.
+// Once CYFY approves one, move it into the named section in underAttackContent.ts.
+export const PENDING_THREAT_ITEMS = {
+  phishing: {
+    'Containment and Response': ['Coordinate isolation or removal of malicious emails where supported.'],
+    'Prevention and Awareness': ['Email security configuration and policy assessments.'],
+  },
+  ransomware: {
+    'Ransomware Preparedness': ['Review backup and recovery readiness.', 'Develop recovery procedures.'],
+  },
+  'insider-threat': {
+    'Response and Governance': ['Support evidence preservation.'],
+  },
+};

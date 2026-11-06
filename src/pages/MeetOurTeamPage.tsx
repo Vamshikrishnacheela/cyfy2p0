@@ -4,12 +4,12 @@ import { usePageMeta } from '../lib/usePageMeta';
 
 interface TeamMember { name: string; title: string; image: string; linkedin: string; position?: string }
 
-// Photos from the "CYFY TEAM" folder, resized to 800px wide (Srikar's 400x400 original is used as is).
+// Photos from the "CYFY TEAM" folder, resized to 800px wide (Srikar's and Babu's originals are used as is).
 // `position` keeps each face in frame inside the 4:5 portrait crop.
 const photo = (file: string) => new URL(`../assets/team/${file}`, import.meta.url).href;
 const TEAM: TeamMember[] = [
   { name: 'Rakesh Reddy', title: 'Founder & CEO', image: photo('rakesh-reddy.jpg'), linkedin: 'https://www.linkedin.com/in/rakesh-reddy-gaddam-4aa20915/', position: '48% 50%' },
-  { name: 'Babu VY', title: 'Lead Techno Sales', image: photo('babu-vy.jpg'), linkedin: 'https://www.linkedin.com/in/yesu-babu-veeranki-62415b24/', position: '50% 4%' },
+  { name: 'Babu VY', title: 'Lead Techno Sales', image: photo('babu-vy.jpg'), linkedin: 'https://www.linkedin.com/in/yesu-babu-veeranki-62415b24/', position: '75% 50%' },
   { name: 'Naveen Adiraju', title: 'Director Sales – Business Development', image: photo('naveen-adiraju.jpg'), linkedin: 'https://www.linkedin.com/in/naveen-adiraju/', position: '50% 25%' },
   { name: 'Anil B', title: 'Lead Architect – Network & Security', image: photo('anil-b.jpg'), linkedin: 'https://www.linkedin.com/in/anil-kumar-bellana-5b8b96192/', position: '53% 50%' },
   { name: 'Srikar Marupaka', title: 'Senior Cyber Security Engineer', image: photo('srikar-marupaka.jpg'), linkedin: 'https://www.linkedin.com/in/srikar-marupaka-727157157/', position: '45% 50%' },
