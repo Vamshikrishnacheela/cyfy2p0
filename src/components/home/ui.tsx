@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { motion, useInView, useReducedMotion, animate } from 'motion/react';
 import { Link, useLocation } from 'react-router-dom';
+import { LEGACY_HASH_IDS } from '../../homeContent';
 
 /** Selects a tab when the URL hash is `#<prefix>-<id>` (e.g. /#industry-pharma), so nav links can deep-link. */
 export function useHashSelect(prefix: string, ids: readonly string[], select: (id: string) => void) {
   const { hash, key } = useLocation();
   useEffect(() => {
-    const id = hash.startsWith(`#${prefix}-`) ? hash.slice(prefix.length + 2) : '';
+    const target = LEGACY_HASH_IDS[hash.slice(1)] ?? hash.slice(1);
+    const id = target.startsWith(`${prefix}-`) ? target.slice(prefix.length + 1) : '';
     if (ids.includes(id)) select(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hash, key]);

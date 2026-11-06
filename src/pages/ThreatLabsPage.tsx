@@ -12,7 +12,7 @@ const OFFERINGS: { id: string; name: ReactNode; title: string; body: string; bul
     title: PRODUCTS.cynapptics.title, body: PRODUCTS.cynapptics.body, bullets: PRODUCTS.cynapptics.bullets,
     action: (
       <SecondaryButton href="https://cynapptics.cyfy.ai/" external className="whitespace-nowrap">
-        Visit Cynapptics <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
+        Visit CYnapptics <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
       </SecondaryButton>
     ),
   },
@@ -24,7 +24,7 @@ const OFFERINGS: { id: string; name: ReactNode; title: string; body: string; bul
   {
     id: 'advisory', name: 'Managed SOC reporting',
     title: 'Weekly threat advisories.', body: 'Our Security Team in Hyderabad reports back every week, so leadership and auditors have what they need.',
-    bullets: ['Weekly threat advisory', 'CISO dashboard', 'Audit-ready records'],
+    bullets: ['Weekly threat advisory', 'COMPASS', 'Audit-ready records'],
     action: <TextLink to="/service/ai-soc">Explore Managed SOC</TextLink>,
   },
 ];
@@ -32,7 +32,7 @@ const OFFERINGS: { id: string; name: ReactNode; title: string; body: string; bul
 export default function ThreatLabsPage() {
   usePageMeta({
     title: 'CYFY Threat Labs | CYFY Solutions',
-    description: 'Threat intelligence and attack surface tools from CYFY: Cynapptics, CyShield Pro and weekly threat advisories.',
+    description: 'Threat intelligence and attack surface tools from CYFY: CYnapptics, CyShield Pro and weekly threat advisories.',
   });
 
   return (

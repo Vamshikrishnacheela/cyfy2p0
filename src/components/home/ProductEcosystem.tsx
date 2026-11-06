@@ -54,7 +54,7 @@ function OsinterView() {
 
 function cynappticsView() {
   return (
-    <Window title="cynapptics / Live intelligence">
+    <Window title="CYnapptics / Live intelligence">
       <ul>
         {ADVISORIES.map((a, i) => (
           <li key={a.cve} className={`grid grid-cols-[4.5rem_1fr] gap-3 px-4 py-3 ${i ? 'border-t border-border-base' : ''}`}>
@@ -74,18 +74,18 @@ function cynappticsView() {
 }
 
 const CSCRF = ['Governance', 'Identify', 'Protect', 'Detect', 'Respond', 'Recover'];
-// Illustrative values only, like the rest of the sample panels; the counts repeat the cyshield and cynapptics samples above
+// Illustrative values only, like the rest of the sample panels; the counts repeat the cyshield and CYnapptics samples above
 const SAMPLE_READINESS = [92, 88, 81, 95, 86, 74];
-const CISO_STATS = [
+const COMPASS_STATS = [
   { label: 'Open findings', value: PRODUCTS.cyshield.stats[1].value },
   { label: 'Exploited CVEs', value: ADVISORIES.length },
   { label: 'Pillars tracked', value: CSCRF.length },
 ];
-function CisoDashboardView() {
+function CompassView() {
   return (
-    <Window title="CISO Dashboard / Security posture">
+    <Window title="COMPASS / Security posture">
       <dl className="grid grid-cols-3 border-b border-border-base">
-        {CISO_STATS.map((s, i) => (
+        {COMPASS_STATS.map((s, i) => (
           <div key={s.label} className={`px-4 py-3 ${i ? 'border-l border-border-base' : ''}`}>
             <dt className="text-[11px] text-text-subtle">{s.label}</dt>
             <dd className="text-xl font-semibold tabular-nums">{s.value}</dd>
@@ -121,8 +121,8 @@ function CisoDashboardView() {
 
 const DETAIL: Record<NodeId, { title: string; body: string; bullets: string[]; link?: { to: string; label: string }; external?: { href: string; label: string }; View: () => JSX.Element }> = {
   cyshield: { title: PRODUCTS.cyshield.title, body: PRODUCTS.cyshield.body, bullets: PRODUCTS.cyshield.bullets, View: OsinterView },
-  cynapptics: { title: PRODUCTS.cynapptics.title, body: PRODUCTS.cynapptics.body, bullets: PRODUCTS.cynapptics.bullets, external: { href: 'https://cynapptics.cyfy.ai/', label: 'Visit Cynapptics' }, View: cynappticsView },
-  cisoDashboard: { title: PRODUCTS.cisoDashboard.title, body: PRODUCTS.cisoDashboard.body, bullets: PRODUCTS.cisoDashboard.bullets, link: { to: '/#customers', label: 'See customer results' }, View: CisoDashboardView },
+  cynapptics: { title: PRODUCTS.cynapptics.title, body: PRODUCTS.cynapptics.body, bullets: PRODUCTS.cynapptics.bullets, external: { href: 'https://cynapptics.cyfy.ai/', label: 'Visit CYnapptics' }, View: cynappticsView },
+  compass: { title: PRODUCTS.compass.title, body: PRODUCTS.compass.body, bullets: PRODUCTS.compass.bullets, link: { to: '/#customers', label: 'See customer results' }, View: CompassView },
 };
 
 export default function ProductEcosystem() {
@@ -136,7 +136,7 @@ export default function ProductEcosystem() {
         <SectionHeader
           eyebrow="CYFY platform"
           title="Our own tools, running inside your environment."
-          body="cyshield and cynapptics feed our SOC with what attackers can see and what they are exploiting right now. Select a stage to see how the pieces work together."
+          body="cyshield and CYnapptics feed our SOC with what attackers can see and what they are exploiting right now. Select a stage to see how the pieces work together."
         />
 
         <ol className="grid grid-cols-2 lg:grid-cols-3 gap-3" role="tablist" aria-label="CYFY security ecosystem">

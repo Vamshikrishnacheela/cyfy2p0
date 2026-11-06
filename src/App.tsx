@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import { motion, AnimatePresence, MotionConfig } from 'motion/react';
 import { MessageSquare } from 'lucide-react';
 import Navbar from './components/Navbar';
+import { LEGACY_HASH_IDS } from './homeContent';
 import Hero from './components/Hero';
 import Footer from './components/Footer';
 import Newsletter from './components/Newsletter';
@@ -54,7 +55,8 @@ function ScrollManager() {
       window.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
       return;
     }
-    const id = decodeURIComponent(hash.slice(1));
+    const rawId = decodeURIComponent(hash.slice(1));
+    const id = LEGACY_HASH_IDS[rawId] ?? rawId;
     // Glide within the current page; arriving from another page (or with reduced motion) jumps straight there
     const behavior: ScrollBehavior = samePage && !window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'auto';
     // Lazily loaded pages render their sections a little later, so retry for up to ~3s
@@ -73,8 +75,8 @@ function ScrollManager() {
 
 function HomePage() {
   usePageMeta({
-    title: 'CYFY - 24/7 Network and Security Operations',
-    description: 'CYFY designs, secures and runs network and security operations for enterprises: 24/7 SOC and NOC, threat intelligence and audit-ready GRC from an ISO/IEC 27001:2022 certified organization.',
+    title: 'CYFY - AI-native network and cybersecurity services',
+    description: 'CYFY: AI-native network and cybersecurity services. 24/7 SOC and NOC, threat intelligence and audit-ready GRC from an ISO/IEC 27001:2022 certified organization.',
   });
   return (
     <>

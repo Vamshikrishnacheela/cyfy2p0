@@ -57,7 +57,7 @@ export const SERVICES: Service[] = [
       "Logs normalised in the SIEM and correlated against 1,000+ MITRE ATT&CK use cases",
       "L1 triage, L2 validation and L3 investigation, escalated to a SOC lead",
       "SOAR playbooks to contain threats, with a 30 minute mean time to respond on the GUARD++ tier",
-      "Weekly threat advisory, a CISO dashboard and audit-ready records",
+      "Weekly threat advisory, COMPASS and audit-ready records",
     ],
     cta: "Discuss Managed SOC",
     interest: "managed-soc",

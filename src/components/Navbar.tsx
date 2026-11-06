@@ -30,24 +30,24 @@ const NAV: NavGroup[] = [
   ] },
   { label: 'Platform', items: [
     { label: 'CyShield Pro', product: 'cyshield', desc: 'See what an attacker sees', to: '/#platform' },
-    { label: 'Cynapptics', product: 'cynapptics', desc: 'Threat intelligence your team can act on', to: '/#platform-cynapptics' },
-    { label: 'CISO Dashboard', desc: 'Security visibility and governance for leadership', to: '/#platform-cisoDashboard' },
+    { label: 'CYnapptics', product: 'cynapptics', desc: 'Threat intelligence your team can act on', to: '/#platform-cynapptics' },
+    { label: 'COMPASS', desc: 'Security visibility and governance for leadership', to: '/#platform-compass' },
     // Hidden until the platform section has CISORA content: its target (#platform-compaas) does not exist
     // { label: 'CISORA', desc: 'AI-enabled GRC platform', to: '/#platform-compaas' },
 
     // { label: 'How our Security Team works', desc: 'From alert to closure, around the clock', to: '/#soc' },
   ] },
   { label: 'Solutions', items: [
-    { label: 'Operate', desc: 'We run it, day and night', to: '/#cap-operate' },
-    { label: 'Test', desc: 'We test it like an attacker would', to: '/#cap-test' },
-    { label: 'Comply', desc: 'We keep you audit-ready', to: '/#cap-comply' },
+    { label: 'Network Infrastructure', desc: 'Wired, SD-WAN, NOC and architecture', to: '/#cap-network-infrastructure' },
+    { label: 'Cybersecurity', desc: 'NAC, firewall, EDR/XDR, DLP, WAF and SWG', to: '/#cap-cybersecurity' },
+    { label: 'Manage Security Services', desc: 'Testing, advisory and audit readiness', to: '/#cap-manage-security-services' },
   ] },
   { label: 'CYFY Threat Labs', to: '/threat-labs' },
   { label: 'Company', items: [
     { label: 'About CYFY', desc: 'Our profile, services and leadership', to: '/about' },
     { label: 'Meet Our Team', desc: 'The people behind CYFY', to: '/meet-our-team' },
+    { label: 'Events',  to: '/events' },
     { label: 'Partners', desc: '30+ OEM platform partnerships', to: '/#partners' },
-    { label: 'Events', desc: 'CYFY at Cyber Dome 2025', to: '/events' },
     { label: 'Contact', desc: 'Email, phone and office address', to: '/about#contact' },
   ] },
 ];

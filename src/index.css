@@ -147,6 +147,34 @@
   to { stroke-dashoffset: -20; }
 }
 
+/* Hero headline frame, after the scanner brackets in the CYFY logo. Dash lengths are fractions of the frame's
+   perimeter (pathLength=1). The head starts 0.105 ahead of the tail so their leading edges line up. */
+.scan-frame { stroke: var(--color-primary); }
+.scan-light {
+  stroke: var(--amber-ink);
+  stroke-width: 1.5px;
+}
+.scan-light-tail {
+  stroke-dasharray: 0.14 0.86;
+  opacity: 0.35;
+  animation: scan-tail 9s linear infinite;
+}
+.scan-light-head {
+  stroke-dasharray: 0.035 0.965;
+  animation: scan-head 9s linear infinite;
+}
+@keyframes scan-tail {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -1; }
+}
+@keyframes scan-head {
+  from { stroke-dashoffset: -0.105; }
+  to { stroke-dashoffset: -1.105; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scan-light { display: none; }
+}
+
 .glow-teal {
   box-shadow: 0 0 20px rgba(0, 149, 175, 0.2);
 }

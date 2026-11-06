@@ -3,7 +3,7 @@ const cyLettering = new URL('../assets/images/cyfy-cy-lettering.png', import.met
 
 export const PRODUCT_NAMES = {
   cyshield: 'Shield Pro',
-  cynapptics: 'nnapptics',
+  cynapptics: 'napptics',
 } as const;
 
 export type ProductId = keyof typeof PRODUCT_NAMES;
@@ -15,7 +15,7 @@ export function ProductName({ id, className = '' }: { id: ProductId; className?:
   return (
     <span className={`whitespace-nowrap ${className}`}>
       <img src={cyLettering} alt="" aria-hidden="true" draggable={false} className="inline-block h-[0.73em] w-auto align-baseline mr-[0.06em]" />
-      <span className="sr-only">Cy</span>
+      <span className="sr-only">CY</span>
       {PRODUCT_NAMES[id]}
     </span>
   );

@@ -4,8 +4,10 @@ import type { LucideIcon } from 'lucide-react';
 import {
   Network, ShieldCheck, ClipboardCheck, Server, Flame, AppWindow, Cloud, Fingerprint,
   Factory, Landmark, Pill, Store, Radar, Newspaper, Search, Layers, Settings2, BadgeCheck,
-  Users, Timer, Target, Eye, Zap, Brain, Bug, Swords, MailWarning, Compass, Building2, Activity,
+  Users, Timer, Target, Eye, Zap, Bug, Swords, MailWarning, Compass, Building2,
+  Cable, Waypoints, UserCheck, ScanSearch, FileLock, Globe,
 } from 'lucide-react';
+import type { EnquiryInterest } from './constants';
 
 export interface Metric { icon: LucideIcon; value: string; label: string }
 export const HERO_METRICS: Metric[] = [
@@ -17,24 +19,28 @@ export const HERO_METRICS: Metric[] = [
 
 // Client logos in CYFY's display order. Files in src/assets/clients are the official logos from each client's own
 // website, cropped to their artwork and resized; never recoloured. `plate` is the tile colour behind the logo: white for
-// logos designed for light backgrounds, dark for IHCL's white header logo. `ratio` is width / height of the file.
+// logos designed for light backgrounds, dark for IHCL's white header logo, Zepto's brand purple for its white wordmark.
+// `ratio` is width / height of the file. Paytm is the wordmark from its site header, without the adjoining UPI lockup.
+// BigBasket is from careers.bigbasket.com. Zepto is from its own Google Play listing because its website blocks automated access.
 // Blackbit (12th in the list) is omitted until CYFY supplies its official logo; the company could not be identified.
-// BigBasket is omitted until CYFY supplies its current official logo; no verified source for the post-2021 logo was available.
 const clientLogo = (file: string) => new URL(`./assets/clients/${file}`, import.meta.url).href;
 export const CLIENT_LOGOS: LogoItem[] = [
   { name: 'Sahi', logo: clientLogo('sahi.svg'), plate: '#ffffff', ratio: 2.28 },
-  { name: 'TradeWell', logo: clientLogo('tradewell.png'), plate: '#ffffff', ratio: 5.00 },
   { name: 'TheraNym Biologics', logo: clientLogo('theranym-biologics.png'), plate: '#ffffff', ratio: 2.36 },
   { name: 'Interpolitan Money', logo: clientLogo('interpolitan-money.png'), plate: '#ffffff', ratio: 10.98 },
   { name: 'Marico', logo: clientLogo('marico.png'), plate: '#ffffff', ratio: 1.00 },
   { name: "Dr. Reddy's", logo: clientLogo('dr-reddys.png'), plate: '#ffffff', ratio: 4.62 },
   { name: 'Aurigene Pharmaceuticals', logo: clientLogo('aurigene-pharmaceutical-services.png'), plate: '#ffffff', ratio: 1.69 },
   { name: 'Amara Raja Batteries', logo: clientLogo('amara-raja.png'), plate: '#ffffff', ratio: 8.49 },
-  { name: 'Pi Health Industries', logo: clientLogo('pi-health.png'), plate: '#ffffff', ratio: 1.06 },
+  { name: 'PI Industries', logo: clientLogo('pi-industries.png'), plate: '#ffffff', ratio: 0.94 },
   { name: 'IHCL', logo: clientLogo('ihcl.png'), plate: '#111418', ratio: 2.92 },
   { name: 'HPCL', logo: clientLogo('hpcl.png'), plate: '#ffffff', ratio: 5.30 },
   { name: 'Aurobindo Pharmaceuticals', logo: clientLogo('aurobindo-pharma.png'), plate: '#ffffff', ratio: 2.06 },
   { name: 'upGrad', logo: clientLogo('upgrad.png'), plate: '#ffffff', ratio: 3.90 },
+  { name: 'BigBasket', logo: clientLogo('bigbasket.png'), plate: '#ffffff', ratio: 1.83 },
+  { name: 'Paytm', logo: clientLogo('paytm.svg'), plate: '#ffffff', ratio: 3.15 },
+  { name: 'Zepto', logo: clientLogo('zepto.png'), plate: '#7c1cc0', ratio: 2.99 },
+  { name: 'Decathlon', logo: clientLogo('decathlon.svg'), plate: '#ffffff', ratio: 6.65 },
 ];
 
 export const WHY_STATS = [
@@ -50,17 +56,17 @@ export interface CoverageLine {
 }
 export const COVERAGE: CoverageLine[] = [
   {
-    id: 'network', anchor: 'network-noc', num: '01', title: 'Network', code: 'NOC', icon: Network,
+    id: 'network', anchor: 'network-noc', num: '01', title: 'Network Infrastructure', code: 'NOC', icon: Network,
     summary: 'Network as a service with 24/7 infrastructure monitoring and self-healing design.',
     tags: ['LAN, WAN and SD-WAN', 'NGFW and NAC', 'Micro-segmentation'],
     details: ['24/7 infrastructure monitoring and AIOps', 'Designed and run on HPE Aruba, Juniper, Palo Alto Networks and Fortinet', 'IT/OT segmentation to IEC 62443'],
-    href: '/service/secure-architecture', cta: 'Explore network',
+    href: '/service/secure-architecture', cta: 'Explore network infrastructure',
   },
   {
     id: 'security', anchor: 'security-soc', num: '02', title: 'Security', code: 'SOC', icon: ShieldCheck,
     summary: 'Round-the-clock detection, triage and response by L1 to L3 analysts.',
     tags: ['SIEM and SOAR', 'EDR and XDR', 'Threat intelligence'],
-    details: ['In-house Security Team in Hyderabad, staffed around the clock', 'SOAR playbooks contain threats, 30 minute MTTR on the premium tier', 'Weekly threat advisory and a CISO dashboard'],
+    details: ['In-house Security Team in Hyderabad, staffed around the clock', 'SOAR playbooks contain threats, 30 minute MTTR on the premium tier', 'Weekly threat advisory and COMPASS'],
     href: '/service/managed-security-services', cta: 'Explore security',
   },
   {
@@ -83,7 +89,7 @@ export const STEPS = [
   { icon: Search, title: 'Assess', body: 'Gap assessment, VAPT and an external attack surface review.', outputs: ['Gap assessment', 'VAPT', 'External attack surface review with cyshield'] },
   { icon: Layers, title: 'Architect', body: 'Design the network and security stack with the right OEM platforms.', outputs: ['Network and security design', 'Platform selection from 30+ OEM partners'] },
   { icon: Settings2, title: 'Operate', body: 'Run it 24/7 from our NOC and SOC, with SOAR-driven response.', outputs: ['24/7 NOC and SOC', 'L1 triage, L2 validation, L3 investigation', 'SOAR-driven response'] },
-  { icon: BadgeCheck, title: 'Prove', body: 'Weekly advisories, a CISO dashboard and audit-ready records.', outputs: ['Weekly threat advisory', 'CISO dashboard', 'Audit-ready records'] },
+  { icon: BadgeCheck, title: 'Prove', body: 'Weekly advisories, COMPASS and audit-ready records.', outputs: ['Weekly threat advisory', 'COMPASS', 'Audit-ready records'] },
 ];
 
 export const SOC_PILLARS = [
@@ -163,44 +169,123 @@ export const SOC_STAGES: { id: SocStageId; label: string; status: string; body: 
   { id: 'respond', label: 'Respond', status: 'Containing threat', body: 'A SOAR playbook contains the threat. Premium-tier clients get a 30 minute mean time to respond.' },
 ];
 
-export const SOC_OUTCOMES = ['Client escalation within SLA', 'Weekly threat advisory', 'CISO dashboard', 'Audit-ready records'];
+export const SOC_OUTCOMES = ['Client escalation within SLA', 'Weekly threat advisory', 'COMPASS', 'Audit-ready records'];
 
-export interface Capability { title: string; body: string; plain?: string; icon: LucideIcon; href?: string }
-export interface CapabilityTab { id: string; label: string; icon: LucideIcon; lead: { title: string; body: string }; items: Capability[] }
+export interface Capability {
+  title: string; body: string; plain?: string; icon: LucideIcon; href?: string;
+  /** Shown when the card is expanded */
+  details?: string[];
+  /** Enquiry topic for the card's Learn More detail, when it differs from the tab's default */
+  interest?: EnquiryInterest;
+}
+export interface CapabilityTab {
+  id: string; label: string; icon: LucideIcon; lead: { title: string; body: string }; items: Capability[];
+  /** Shown in the Learn More detail. Drawn from existing CYFY copy; do not add unverified capabilities. */
+  topics: { title: string; body: string }[];
+}
+// Only capabilities backed by existing CYFY content appear here. Drafts awaiting CYFY approval are in solutionsPendingApproval.ts.
+// Exception: the wireless, IPAM and data center topics below reuse those drafts' wording because the Learn More brief named them.
 export const CAPABILITY_TABS: CapabilityTab[] = [
   {
-    id: 'operate', label: 'Operate', icon: Settings2,
-    lead: { title: 'We run it, day and night.', body: 'Managed operations for the infrastructure and security stack you depend on, under one SLA.' },
+    id: 'network-infrastructure', label: 'Network Infrastructure', icon: Network,
+    lead: { title: 'We design and run your network.', body: 'Network as a service with 24/7 infrastructure monitoring and self-healing design.' },
+    topics: [
+      { title: "Enterprise wired and wireless networking", body: "Campus and branch LAN and WAN built around dependable, high-capacity switching, with enterprise Wi-Fi planned around how your sites and devices are actually used." },
+      { title: "Network architecture and connectivity", body: "Network and security design, with platforms selected from 30+ OEM partners, covering LAN, WAN and micro-segmentation." },
+      { title: "SD-WAN and network infrastructure management", body: "Software-defined connectivity that links distributed sites under central control, with 24/7 infrastructure monitoring and AIOps from our NOC." },
+      { title: "IP address management and network visibility", body: "One managed record of the addresses and subnets across your network, with centralised IP, DHCP and DNS management." },
+      { title: "Data center and infrastructure solutions", body: "Compute, storage and network foundations for modern data center workloads, including workload segmentation." },
+    ],
     items: [
-      { title: 'Managed SOC', icon: ShieldCheck, body: '24/7 detection, triage and response with L1 to L3 analysts.', plain: '24/7 digital guards: AI-powered surveillance that monitors your systems like a global security team.', href: '/service/ai-soc' },
+      {
+        title: 'Enterprise Wired Networking', icon: Cable,
+        body: 'Campus and branch LAN and WAN built around dependable, high-capacity switching.',
+        details: ['Switching infrastructure for branch offices and large sites', 'High-throughput, low-latency connectivity', 'Architecture that scales as sites and users grow', 'Redundant design for availability'],
+      },
+      {
+        title: 'SD-WAN Solutions', icon: Waypoints,
+        body: 'Software-defined connectivity that links distributed sites under central control.',
+        details: ['Centralised network management and visibility', 'Dynamic traffic routing across links', 'Secure connectivity between distributed locations', 'Support for traditional and cloud-based applications'],
+      },
       { title: 'Network and NOC', icon: Network, body: 'Network as a service, 24/7 infrastructure monitoring and AIOps.', href: '/service/secure-architecture' },
+      { title: 'Secure Architecture', icon: Building2, body: "Designing robust security frameworks for organizations' needs.", plain: "Designing your company's systems to be secure from the ground up.", href: '/service/secure-architecture' },
       { title: 'Cloud, identity and data', icon: Cloud, body: 'CSPM, CNAPP, IAM, PAM and DLP, built with leading OEMs.', plain: 'Ensuring that your data stored in the cloud stays private and protected.', href: '/service/cloud-security' },
-      { title: 'OT and IoT security', icon: Factory, body: 'IT/OT segmentation to IEC 62443 and secure remote access.' },
-      { title: 'Security for AI', icon: Brain, body: 'Shadow AI control and protection for enterprise LLMs and copilots.' },
-      { title: 'Managed Security Services', icon: Activity, body: '24x7 AI-driven SOC services ensuring constant monitoring and rapid response to security incidents.', plain: "We manage all your security tools, so you don't have to worry about a thing.", href: '/service/managed-security-services' },
     ],
   },
   {
-    id: 'test', label: 'Test', icon: Target,
-    lead: { title: 'We test it like an attacker would.', body: 'Find the gaps in your applications, people and perimeter before someone else does.' },
+    id: 'cybersecurity', label: 'Cybersecurity', icon: ShieldCheck,
+    lead: { title: 'We protect your access, perimeter and data.', body: 'Controls for your access, perimeter, endpoints and OT, alongside protection for your web applications, web access and sensitive data.' },
+    topics: [
+      { title: "Data Loss Prevention (DLP)", body: "Controls that keep sensitive information from leaving through the wrong channel, built on data classification and monitoring." },
+      { title: "Web Application Firewall (WAF)", body: "A protective layer in front of public-facing web applications that filters SQL injection and cross-site scripting attempts." },
+      { title: "Secure Web Gateway (SWG)", body: "Policy-based control over how your users reach the internet, with URL filtering, SSL inspection and blocking of malicious websites." },
+      { title: "Protection of enterprise applications and sensitive data", body: "Web application protection that pairs with web application penetration testing, and policies that reduce accidental disclosure and unauthorised exfiltration." },
+      { title: "Web and network threat protection", body: "Deep packet inspection and intrusion prevention at the perimeter, with access policy enforced across wired, wireless and VPN connections." },
+    ],
+    items: [
+      {
+        title: 'Network Access Control (NAC)', icon: UserCheck, href: '/service/secure-architecture',
+        body: 'Know which users and devices are on your network, and decide what each one can reach.',
+        details: ['Visibility of connected devices and users', 'Device profiling and authentication', 'Policy enforcement across wired, wireless and VPN access'],
+      },
+      {
+        title: 'Next-Generation Firewall', icon: Flame, href: '/service/secure-architecture',
+        body: 'Perimeter protection that inspects traffic by application and content, not just port.',
+        details: ['Deep packet inspection and intrusion prevention', 'Application control and SSL inspection', 'Centralised monitoring and policy management'],
+      },
+      {
+        title: 'OT Security', icon: Factory, href: '/service/secure-architecture',
+        body: 'IT/OT segmentation to IEC 62443 and secure remote access.',
+        details: ['Segmentation between IT and OT networks', 'OT systems monitored by the SOC', 'Detection of unusual communication patterns', 'Handled with plant safety and availability in mind'],
+      },
+      {
+        title: 'EDR and XDR', icon: ScanSearch, href: '/service/managed-security-services',
+        body: 'Endpoint detection and response, extended to correlate activity across your environment.',
+        details: ['Continuous endpoint monitoring', 'Behavioural analytics for threat detection and investigation', 'Visibility across endpoints, networks, servers and cloud', 'Containment and incident mitigation'],
+      },
+      {
+        title: 'Data Loss Prevention (DLP)', icon: FileLock, href: '/service/cloud-security',
+        body: 'Controls that keep sensitive information from leaving through the wrong channel.',
+        details: ['Data classification and monitoring', 'Policies that reduce accidental disclosure', 'Controls against unauthorised data exfiltration'],
+      },
+      {
+        title: 'Web Application Firewall (WAF)', icon: AppWindow, interest: 'architecture',
+        body: 'A protective layer in front of public-facing web applications.',
+        details: ['Protection against common web application attacks', 'Filtering of SQL injection and cross-site scripting attempts', 'Pairs with web application penetration testing'],
+      },
+      {
+        title: 'Secure Web Gateway (SWG)', icon: Globe, interest: 'architecture',
+        body: 'Policy-based control over how your users reach the internet.',
+        details: ['Blocking of malware and malicious websites', 'URL filtering and SSL inspection', 'Granular web access policies'],
+      },
+    ],
+  },
+  {
+    id: 'manage-security-services', label: 'Manage Security Services', icon: Target,
+    lead: { title: 'We test and keep you audit-ready.', body: 'Find the gaps before someone else does, and maintain audit readiness all year.' },
+    topics: [
+      { title: "Managed Security Services", body: "Your security tools managed for you, including SIEM and SOAR, EDR and XDR, and threat intelligence." },
+      { title: "Managed SOC and SIEM monitoring", body: "24/7 monitoring from our in-house Hyderabad SOC, with logs normalised in the SIEM and correlated against 1,000+ MITRE ATT&CK use cases." },
+      { title: "Security operations and threat monitoring", body: "L1 triage, L2 validation and L3 investigation, escalated to a SOC lead and backed by a weekly threat advisory." },
+      { title: "Security assessments and advisory services", body: "VAPT, red and blue teaming and phishing simulations to find the gaps, with vCISO and security consulting guidance on your strategy and posture." },
+      { title: "Security management and incident response", body: "SOAR playbooks contain threats, with a 30 minute mean time to respond on the GUARD++ tier and one team and one SLA across NOC, SOC and GRC." },
+    ],
     items: [
       { title: 'Web App Pentest', icon: Bug, body: 'Proactively identifying vulnerabilities that could jeopardize sensitive user and financial information.', plain: 'We try to break into your website so we can find and fix the holes before real attackers do.', href: '/service/web-app-pentest' },
       { title: 'Red & Blue Teaming', icon: Swords, body: "Testing and improving your organization's security posture through adversarial simulations.", plain: 'We simulate real-world attacks to train your defenses to be battle-ready.', href: '/service/red-blue-teaming' },
       { title: 'Phishing as a Service', icon: MailWarning, body: "Proactively test and enhance your organization's defenses against phishing attacks.", plain: 'Safe simulated phishing emails teach your team how to spot and report the real ones.', href: '/service/phishing-paas' },
-      { title: 'Attack surface management', icon: Radar, body: 'Self-hosted attack surface monitoring with cyshield: domains, ports, TLS, email and DNS hygiene.' },
-    ],
-  },
-  {
-    id: 'comply', label: 'Comply', icon: ClipboardCheck,
-    lead: { title: 'We keep you audit-ready.', body: 'Audit readiness for the regulators you answer to, maintained all year rather than the week before.' },
-    items: [
       { title: 'vCISO Services', icon: Compass, body: 'Expert guidance and strategic oversight to safeguard your business from cyber threats.', plain: 'An expert security leader who coordinates your strategy without the full-time cost.', href: '/service/vciso-services' },
       { title: 'Security Consulting', icon: Users, body: 'Expert guidance to enhance your security posture and address vulnerabilities in your organization.', plain: "Security specialists who diagnose your organization's digital health.", href: '/service/security-consulting' },
-      { title: 'Secure Architecture', icon: Building2, body: "Designing robust security frameworks for organizations' needs.", plain: "Designing your company's systems to be secure from the ground up.", href: '/service/secure-architecture' },
-      { title: 'SEBI CSCRF readiness', icon: Landmark, body: 'Gap assessment, VAPT and a 24/7 managed SOC ahead of the audit window, with weekly CSCRF-ready reporting.' },
+      { title: 'SEBI CSCRF readiness', icon: Landmark, interest: 'assessment', body: 'Gap assessment, VAPT and a 24/7 managed SOC ahead of the audit window, with weekly CSCRF-ready reporting.' },
     ],
   },
 ];
+
+// Deep links from before the renames, so existing bookmarks still reach the same content.
+export const LEGACY_HASH_IDS: Record<string, string> = {
+  'platform-cisoDashboard': 'platform-compass',
+  'cap-security': 'cap-cybersecurity',
+};
 
 export const PRODUCTS = {
   cyshield: {
@@ -216,12 +301,12 @@ export const PRODUCTS = {
     ],
   },
   cynapptics: {
-    name: 'Cynapptics', icon: Newspaper, title: 'Threat intelligence your team can act on.',
+    name: 'CYnapptics', icon: Newspaper, title: 'Threat intelligence your team can act on.',
     body: 'One live view of CERT-In advisories, CVE updates and threat context from more than 50 sources.',
     bullets: ['CERT-In and NVD in one feed', 'Threat actor, IOC and MITRE context', 'Briefings and exports for leadership'],
   },
-  cisoDashboard: {
-    name: 'CISO Dashboard', icon: ClipboardCheck, title: 'CISO Dashboard',
+  compass: {
+    name: 'COMPASS', icon: ClipboardCheck, title: 'COMPASS',
     body: 'A leadership view of your security programme, built for CISO-level visibility, governance and decision-making. Everything the SOC does is reported back alongside weekly threat advisories and audit-ready records, so you can see where you stand and decide what comes next.',
     bullets: ['Weekly threat advisory', 'Audit-ready records for SEBI CSCRF, ISO 27001 and more', 'Evidence your auditors can use'],
   },
@@ -229,8 +314,8 @@ export const PRODUCTS = {
 
 export const ECOSYSTEM = [
   { id: 'cyshield', stage: 'Exposure', name: 'cyshield', kind: 'CYFY product', icon: Radar, body: 'Finds your internet-facing exposure: domains, ports, services, TLS, email and DNS hygiene.' },
-  { id: 'cynapptics', stage: 'Intelligence', name: 'cynapptics', kind: 'CYFY product', icon: Newspaper, body: 'Tells you which CERT-In advisories and CVEs are actively exploited, with IOC and MITRE context.' },
-  { id: 'cisoDashboard', stage: 'Report and prove', name: 'CISO Dashboard', kind: 'Managed service', icon: ClipboardCheck, body: 'CISO-level visibility, governance and decision-making, backed by weekly threat advisories and audit-ready records.' },
+  { id: 'cynapptics', stage: 'Intelligence', name: 'CYnapptics', kind: 'CYFY product', icon: Newspaper, body: 'Tells you which CERT-In advisories and CVEs are actively exploited, with IOC and MITRE context.' },
+  { id: 'compass', stage: 'Report and prove', name: 'COMPASS', kind: 'Managed service', icon: ClipboardCheck, body: 'CISO-level visibility, governance and decision-making, backed by weekly threat advisories and audit-ready records.' },
 ] as const;
 
 export interface Advisory {
@@ -321,12 +406,10 @@ export const PARTNERS: PartnerLogo[] = [
   { name: 'BluSapphire', logo: new URL('./assets/partners/blusapphire.png', import.meta.url).href, plate: '#050c19', ratio: 5.27 },
   { name: 'HPE', logo: new URL('./assets/partners/hpe.png', import.meta.url).href, plate: '#292d3a', ratio: 1.78 },
   { name: 'Zscaler', logo: new URL('./assets/partners/zscaler.png', import.meta.url).href, plate: '#ffffff', ratio: 4.62 },
-  { name: 'Infraon', logo: new URL('./assets/partners/infraon.png', import.meta.url).href, plate: '#f9f9f9', ratio: 4.05 },
   { name: 'GlobalSign', logo: new URL('./assets/partners/globalsign.png', import.meta.url).href, plate: '#ffffff', ratio: 4.66 },
   { name: 'Cato Networks', logo: new URL('./assets/partners/cato-networks.png', import.meta.url).href, plate: '#ffffff', ratio: 2.00 },
   { name: 'CyberArk', logo: new URL('./assets/partners/cyberark.png', import.meta.url).href, plate: '#ffffff', ratio: 5.00 },
   { name: 'Sequretek', logo: new URL('./assets/partners/sequretek.png', import.meta.url).href, plate: '#ffffff', ratio: 4.71 },
-  { name: 'Innspark', logo: new URL('./assets/partners/innspark.png', import.meta.url).href, plate: '#1d3d59', ratio: 2.74 },
   { name: 'OPSWAT', logo: new URL('./assets/partners/opswat.png', import.meta.url).href, plate: '#050f22', ratio: 5.55 },
   { name: 'ZeroPort', logo: new URL('./assets/partners/zeroport.png', import.meta.url).href, plate: '#0d0d0d', ratio: 2.30 },
   { name: 'Netskope', logo: new URL('./assets/partners/netskope.svg', import.meta.url).href, plate: '#ffffff', ratio: 6.50 },
@@ -351,7 +434,7 @@ export const FOOTER_COLUMNS = [
   ] },
   { title: 'Products', links: [
     { label: 'CyShield Pro', product: 'cyshield' as const, to: '/#platform' },
-    { label: 'Cynapptics', product: 'cynapptics' as const, to: '/#platform-cynapptics' },
+    { label: 'CYnapptics', product: 'cynapptics' as const, to: '/#platform-cynapptics' },
   ] },
   { title: 'Company', links: [
     { label: 'About CYFY', to: '/about' },

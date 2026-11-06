@@ -48,7 +48,7 @@ export default function PrivacyPolicyPage() {
       </LegalSection>
 
       <LegalSection title="CYFY products and applications">
-        <Pending what="Privacy terms for CYFY products and applications (such as cyshield, cynapptics and Cynapptics) are not covered by this website policy. Approved product privacy content has not been provided." />
+        <Pending what="Privacy terms for CYFY products and applications (such as cyshield and CYnapptics) are not covered by this website policy. Approved product privacy content has not been provided." />
       </LegalSection>
 
       <LegalSection title="Changes to this policy">

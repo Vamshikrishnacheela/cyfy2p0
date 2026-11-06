@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { Activity, BadgeCheck, CheckCircle2, AlertTriangle, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -167,6 +167,57 @@ function SocDashboard() {
   );
 }
 
+/**
+ * Extends the square scanner frame from the CYFY logo around the hero headline: four square-cut corner brackets
+ * with the logo's proportions (arm about 6.7x its thickness), plus a thin light that travels along the frame.
+ * The frame is sized from the wrapped text itself, because the h1 box is always as wide as its column.
+ */
+function ScannerHeadline({ children }: { children: ReactNode }) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const [size, setSize] = useState({ w: 0, h: 0 });
+
+  useLayoutEffect(() => {
+    const wrap = wrapRef.current, heading = headingRef.current;
+    if (!wrap || !heading) return;
+    const measure = () => {
+      const range = document.createRange();
+      range.selectNodeContents(heading);
+      const padRight = parseFloat(getComputedStyle(heading).paddingRight);
+      const w = Math.ceil(range.getBoundingClientRect().right - wrap.getBoundingClientRect().left + padRight);
+      const h = Math.ceil(wrap.getBoundingClientRect().height);
+      setSize(s => (s.w === w && s.h === h ? s : { w, h }));
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(heading);
+    // The web font can change the text width without changing the h1 box
+    document.fonts?.ready.then(measure);
+    return () => observer.disconnect();
+  }, []);
+
+  const arm = Math.round(Math.min(48, Math.max(26, Math.min(size.w, size.h) * 0.2)));
+  const t = Math.round((arm / 6.7) * 2) / 2;
+  const { w, h } = size;
+  const i = t / 2; // Strokes are centred on the path, so inset by half the thickness to keep them inside the frame
+  const brackets = `M${i} ${arm}V${i}H${arm} M${w - arm} ${i}H${w - i}V${arm} M${w - i} ${h - arm}V${h - i}H${w - arm} M${arm} ${h - i}H${i}V${h - arm}`;
+
+  return (
+    <div ref={wrapRef} className="relative mt-6">
+      <h1 ref={headingRef} className="px-4 py-5 sm:px-6 sm:py-6 lg:px-7 lg:py-7 text-[clamp(2rem,10.5vw,2.5rem)] leading-[1.05] sm:text-5xl lg:text-[3.6rem] font-semibold tracking-tight">
+        {children}
+      </h1>
+      {w > 0 && (
+        <svg className="absolute left-0 top-0 pointer-events-none" width={w} height={h} viewBox={`0 0 ${w} ${h}`} fill="none" aria-hidden="true">
+          <path d={brackets} className="scan-frame" strokeWidth={t} strokeLinecap="butt" strokeLinejoin="miter" />
+          <rect x={i} y={i} width={w - t} height={h - t} pathLength={1} className="scan-light scan-light-tail" />
+          <rect x={i} y={i} width={w - t} height={h - t} pathLength={1} className="scan-light scan-light-head" />
+        </svg>
+      )}
+    </div>
+  );
+}
+
 export default function Hero() {
   return (
     <div className="relative hero-bg overflow-hidden">
@@ -178,10 +229,10 @@ export default function Hero() {
             <BadgeCheck className="w-3.5 h-3.5 text-amber-ink" aria-hidden="true" />
             ISO/IEC 27001:2022 certified MSSP
           </p>
-          <h1 className="mt-6 text-[2.5rem] leading-[1.05] sm:text-5xl lg:text-[3.6rem] font-semibold tracking-tight">
-            24/7 network and security operations for{' '}
-            <span className="bg-gradient-to-r from-brand-ink to-amber-ink bg-clip-text text-transparent">enterprises.</span>
-          </h1>
+          <ScannerHeadline>
+            AI-native network and cybersecurity{' '}
+            <span className="bg-gradient-to-r from-brand-ink to-amber-ink bg-clip-text text-transparent">services</span>
+          </ScannerHeadline>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-text-muted">
             Monitoring, response and audit readiness from one team, covering your network, your security and your compliance. Backed by our own threat intelligence and attack surface tools.
           </p>
