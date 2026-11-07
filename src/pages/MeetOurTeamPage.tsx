@@ -4,13 +4,14 @@ import { usePageMeta } from '../lib/usePageMeta';
 
 interface TeamMember { name: string; title: string; image: string; linkedin: string; position?: string }
 
-// Photos from the "CYFY TEAM" folder, resized to 800px wide (Srikar's and Babu's originals are used as is).
+// Photos from the "CYFY TEAM" folder, resized to 800px wide (Srikar's, Babu's and Divya's originals are used as is).
 // `position` keeps each face in frame inside the 4:5 portrait crop.
 const photo = (file: string) => new URL(`../assets/team/${file}`, import.meta.url).href;
 const TEAM: TeamMember[] = [
   { name: 'Rakesh Reddy', title: 'Founder & CEO', image: photo('rakesh-reddy.jpg'), linkedin: 'https://www.linkedin.com/in/rakesh-reddy-gaddam-4aa20915/', position: '48% 50%' },
   { name: 'Babu VY', title: 'Lead Techno Sales', image: photo('babu-vy.jpg'), linkedin: 'https://www.linkedin.com/in/yesu-babu-veeranki-62415b24/', position: '75% 50%' },
   { name: 'Naveen Adiraju', title: 'Director Sales – Business Development', image: photo('naveen-adiraju.jpg'), linkedin: 'https://www.linkedin.com/in/naveen-adiraju/', position: '50% 25%' },
+  { name: 'Divya Darshini', title: 'Sales Lead', image: photo('divya-darshini.jpg'), linkedin: 'https://www.linkedin.com/in/divyadarshini-p-761a27161', position: '47% 30%' },
   { name: 'Anil B', title: 'Lead Architect – Network & Security', image: photo('anil-b.jpg'), linkedin: 'https://www.linkedin.com/in/anil-kumar-bellana-5b8b96192/', position: '53% 50%' },
   { name: 'Srikar Marupaka', title: 'Senior Cyber Security Engineer', image: photo('srikar-marupaka.jpg'), linkedin: 'https://www.linkedin.com/in/srikar-marupaka-727157157/', position: '45% 50%' },
   { name: 'G Vineeth Vishesh', title: 'Senior Cyber Security Engineer', image: photo('g-vineeth-vishesh.jpg'), linkedin: 'https://www.linkedin.com/in/vineet-vishesh-66ab95281/', position: '48% 50%' },
@@ -36,10 +37,10 @@ export default function MeetOurTeamPage() {
             <p className="mt-4 text-base md:text-lg leading-relaxed text-text-muted">The People Behind CYFY's Cybersecurity Expertise</p>
           </Reveal>
 
-          <ul className="grid min-[480px]:grid-cols-2 lg:grid-cols-3 gap-4">
+          <ul className="flex flex-wrap justify-center gap-4">
             {TEAM.map((m, i) => (
-              // With two columns the odd last card is centred at its usual width, so the row has no one-sided gap
-              <li key={m.name} className="min-[480px]:max-lg:last:col-span-2 min-[480px]:max-lg:last:justify-self-center min-[480px]:max-lg:last:w-[calc(50%-0.5rem)]">
+              // Fixed one/two/three-up widths; flex-wrap centres any partial last row, so it has no one-sided gap
+              <li key={m.name} className="w-full min-[480px]:w-[calc(50%-0.5rem)] lg:w-[calc((100%-2rem)/3)]">
                 <Reveal delay={Math.min(i, 5) * 0.05} className="h-full">
                   <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-border-base bg-surface transition-colors hover:border-brand-ink/50">
                     <div className="relative aspect-[4/5] bg-surface-2">

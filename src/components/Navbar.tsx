@@ -30,7 +30,7 @@ const NAV: NavGroup[] = [
   { label: 'Home', to: '/' },
   // Generated from the service catalogue so names and links always match the service pages
   { label: 'Services', wide: true, items: [
-    { label: 'All services', desc: 'Network, security and compliance', to: '/#services' },
+    { label: 'All    services', desc: 'Network, security and compliance', to: '/#services' },
     ...SERVICES.map(s => ({ label: s.title, to: `/service/${s.slug}`, section: SERVICE_GROUPS.find(g => g.id === s.group)!.label })),
   ] },
   { label: 'Platform', items: [

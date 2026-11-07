@@ -234,7 +234,7 @@ export default function Hero() {
             <span className="bg-gradient-to-r from-brand-ink to-amber-ink bg-clip-text text-transparent">services</span>
           </ScannerHeadline>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-text-muted">
-            Monitoring, response and audit readiness from one team, covering your network, your security and your compliance. Backed by our own threat intelligence and attack surface tools.
+            Monitoring, response, and audit readiness from one team — covering your organisation's network, your organisation's security, and your organisation's compliance. Backed by our own threat intelligence and attack surface platforms.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <Link to="/#contact" className="inline-flex items-center justify-center gap-2 rounded-lg bg-btn px-6 py-3.5 text-sm font-semibold text-white hover:bg-btn-hover transition-colors">

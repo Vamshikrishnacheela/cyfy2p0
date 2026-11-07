@@ -4,7 +4,7 @@ import { Reveal, Eyebrow, Counter } from './ui';
 
 const VALUE = [
   'One partner for NOC, SOC and GRC, under one SLA',
-  'Continuous visibility from our in-house Hyderabad SOC',
+  'Continuous visibility from our in-house 24x7 AI SOC Centre',
   'Audit evidence kept ready every week, not the week before',
 ];
 
